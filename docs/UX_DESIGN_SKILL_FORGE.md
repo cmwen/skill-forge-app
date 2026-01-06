@@ -1,35 +1,86 @@
 # Skill Forge - User Experience Design
 
-**Version**: 1.0  
+**Version**: 2.0  
 **Created**: January 6, 2026  
-**Status**: Active  
+**Updated**: January 6, 2026  
+**Status**: Active - Goal-Oriented Redesign  
 **Related**: [PRODUCT_VISION_SKILL_FORGE.md](PRODUCT_VISION_SKILL_FORGE.md)
+
+---
+
+## 📋 Version 2.0 - Major Design Changes
+
+### What Changed and Why
+
+**Problem Identified**: The original design allowed users to generate random decks/flashcards without structure, making content hard to track and manage. Users typically have specific learning goals (e.g., learning a language, mastering a skill), but the previous design didn't properly support this goal-oriented approach.
+
+**Key Design Decisions**:
+
+1. **Goals are now mandatory** - Every piece of content must belong to a learning goal
+   - Prevents orphaned decks and disorganized content
+   - Makes it easy to track progress toward specific objectives
+   - Content generation always happens in the context of a goal
+
+2. **Removed gamification elements** - Simplified for personal learning use
+   - No streaks, XP, badges, or leaderboards
+   - Focus on actual learning progress (mastery %, time spent)
+   - Simple milestones replace achievement systems
+   - Personal tool, not a competitive platform
+
+3. **Simplified navigation** - Reduced from 5 tabs to 4
+   - **Goals** (home): View all learning goals and their progress
+   - **Generate**: Create new content within a goal context
+   - **Progress**: Track statistics and completion
+   - **More**: Settings and data management
+
+4. **Goal-first content generation** - Restructured workflow
+   - User must select (or create) a goal before generating content
+   - Goal context shown throughout the generation flow
+   - Content is saved to specific decks within the goal
+   - No "homeless" content possible
+
+5. **Clearer information hierarchy**
+   - Goals → Decks → Cards (three-level structure)
+   - Easy to see what belongs where
+   - Progress tracking at each level
+   - Consistent navigation patterns
+
+### Result
+
+A more structured, manageable learning experience that helps users stay organized and track meaningful progress toward their personal learning objectives.
 
 ---
 
 ## 🎯 UX Vision
 
-**Design Principle**: *"Learning should feel effortless, engaging, and rewarding."*
+**Design Principle**: *"Structure your learning journey around meaningful goals."*
 
-Skill Forge creates a seamless experience where AI-powered content generation meets intuitive learning interfaces. Users organize content around **Learning Goals**—personalized themes that make learning meaningful and contextual (e.g., "Japanese through One Piece anime"). Users move from idea to practice in seconds, with clear progress feedback and delightful interactions that encourage daily engagement.
+Skill Forge is a personal learning companion that helps users achieve their learning goals through structured, AI-generated content. The design prioritizes **Learning Goals** as the primary organizing principle—users always work within the context of what they want to achieve (e.g., "Learn Spanish for Travel", "Master Python Basics"). Content generation and practice sessions are always tied to a specific goal, ensuring learning materials are organized, trackable, and purposeful.
+
+**Key Philosophy**:
+- **Goal-first approach**: Every piece of content belongs to a goal
+- **Clear structure**: Goals contain organized decks of related material
+- **Progress tracking**: Easy to see advancement toward each goal
+- **Personal tool**: Designed for individual learning, not competition
+- **Simple & focused**: Clean interface without gamification distractions
 
 ---
 
 ## 👥 User Journey Overview
 
 ### New User Journey (First Session)
-1. **Launch app** → Welcoming home screen with quick-start prompt
-2. **Discover features** → Brief interactive tutorial (skippable)
-3. **Generate first deck** → Guided content generation experience
-4. **Practice learning** → Try flashcards with sample content
-5. **See progress** → First achievement unlocked ("First Steps")
+1. **Launch app** → Welcome screen prompts to create first learning goal
+2. **Create learning goal** → Define what they want to learn (e.g., "Spanish for Travel")
+3. **Generate first content** → AI-assisted deck creation within that goal
+4. **Practice learning** → Try flashcards with generated content
+5. **See structure** → Understand goals → decks → cards hierarchy
 
 ### Returning User Journey (Typical Session)
-1. **Launch app** → Home dashboard shows streak, daily challenge, due cards
-2. **Choose activity** → Continue deck, start new generation, or review progress
-3. **Learn & practice** → Use preferred learning widget
-4. **Track progress** → See stats update, badges earned, XP gained
-5. **Exit satisfied** → Clear stopping point with next session preview
+1. **Launch app** → Home shows active learning goals with progress
+2. **Select goal** → Choose which goal to work on today
+3. **Choose deck** → Pick specific topic within that goal
+4. **Learn & practice** → Use flashcards or quiz mode
+5. **Track progress** → See goal completion percentage update
 
 ---
 
@@ -44,158 +95,317 @@ Skill Forge creates a seamless experience where AI-powered content generation me
 │                                             │
 │                                             │
 └─────────────────────────────────────────────┘
-┌─────┬─────┬─────┬─────┬─────┐
-│Home │Learn│Gen  │Stats│More │
-└─────┴─────┴─────┴─────┴─────┘
+┌───────────┬───────────┬───────────┬─────────┐
+│  Goals    │  Generate │  Progress │  More   │
+└───────────┴───────────┴───────────┴─────────┘
 ```
 
-**Navigation Structure**:
-1. **Home** 🏠 - Dashboard, streaks, daily challenge
-2. **Learn** 📚 - Browse decks, quick practice
-3. **Generate** ✨ - Content creation & LLM integration
-4. **Stats** 📊 - Progress, achievements, analytics
-5. **More** ⚙️ - Settings, export/import, about
+**Simplified Navigation Structure**:
+1. **Goals** 🎯 - Learning goals, decks, practice
+2. **Generate** ✨ - Content creation & import
+3. **Progress** 📊 - Goal progress, statistics
+4. **More** ⚙️ - Settings, export/import, help
 
 ### Screen Hierarchy
 
 ```
-Home
-├── Dashboard View
-├── Daily Challenge
-├── Active Learning Goals
-└── Recent Activity
-
-Learn
-├── Learning Goals (grouped view)
+Goals (Home)
+├── Learning Goals List
 ├── Goal Detail
-│   └── Decks in Goal
-├── All Decks (ungrouped)
+│   ├── Decks in Goal
+│   ├── Goal Settings
+│   └── Goal Progress
 ├── Deck Detail
-│   ├── Flashcards
-│   ├── Quiz
-│   ├── Spaced Repetition
-│   └── Challenges
-└── Search & Filter
+│   ├── Flashcard Practice
+│   ├── Quiz Mode
+│   └── Card Management
+└── Search Goals/Decks
 
 Generate
-├── New Content
-│   ├── Learning Goal Selection
-│   ├── Topic Selection
-│   ├── Prompt Builder
-│   └── Content Import
-├── Provider Settings (optional)
-└── Generation History
+├── Select Learning Goal (required)
+├── Topic & Parameters
+├── Prompt Generation
+├── Import Content (paste)
+└── Preview & Confirm
 
-Stats
-├── Overview Dashboard
-├── Learning Goals Progress
-├── Achievements
-├── Streak Calendar
-└── Detailed Analytics
+Progress
+├── All Goals Overview
+├── Goal-Specific Progress
+├── Statistics & Charts
+└── Completed Items History
 
 More
+├── Goals Management
+│   ├── Create/Edit Goals
+│   ├── Archive Goals
+│   └── Goal Templates
 ├── Settings
-├── Learning Goals Management
-├── Data Export/Import
-├── Dark Theme Toggle
-├── TTS Settings
-└── About/Help
+│   ├── App Preferences
+│   ├── LLM Provider (optional)
+│   └── Data Management
+├── Export/Import Data
+└── Help & About
 ```
 
 ---
 
 ## 🎨 Screen-by-Screen Design
 
-### 1. Home Screen (Dashboard)
+### 1. Goals Screen (Home/Primary Screen)
 
-**Purpose**: Motivate daily engagement, show progress at a glance
+**Purpose**: Display all learning goals with clear progress tracking
 
 **Layout**:
 ```
 ┌─────────────────────────────────────────┐
-│  [Profile]        🔥 7-Day Streak       │
+│  My Learning Goals            [Search]  │
 │                                         │
-│  ┌─────────────────────────────────┐  │
-│  │   Today's Challenge              │  │
-│  │   Learn 10 new Spanish verbs     │  │
-│  │   Progress: ████░░░░  5/10       │  │
-│  │   [Start Challenge]              │  │
-│  └─────────────────────────────────┘  │
-│                                         │
-│  Active Learning Goals                  │
+│  Active Goals                           │
 │  ┌─────────────────────────────────┐  │
 │  │ 🇯🇵 Japanese - One Piece        │  │
-│  │ 3 decks • 12 cards due           │  │
-│  │ Progress: ████░░░░  40%          │  │
+│  │ 3 decks • 150 total cards       │  │
+│  │ ████████░░░░  65% complete      │  │
+│  │ Last studied: 2 hours ago       │  │
 │  └─────────────────────────────────┘  │
 │  ┌─────────────────────────────────┐  │
 │  │ 💻 Python Fundamentals          │  │
-│  │ 2 decks • 5 cards due            │  │
-│  │ Progress: ██░░░░░░  25%          │  │
+│  │ 2 decks • 85 total cards        │  │
+│  │ ████░░░░░░░░  32% complete      │  │
+│  │ Last studied: Yesterday         │  │
+│  └─────────────────────────────────┘  │
+│  ┌─────────────────────────────────┐  │
+│  │ 🇪🇸 Spanish for Travel          │  │
+│  │ 4 decks • 200 total cards       │  │
+│  │ ██░░░░░░░░░░  18% complete      │  │
+│  │ Last studied: 3 days ago        │  │
 │  └─────────────────────────────────┘  │
 │                                         │
-│  Recent Achievements                    │
-│  🏆 Quiz Master    🎯 7-Day Streak     │
+│  Completed Goals (2)              [▼]  │
 │                                         │
-│  Quick Actions                          │
-│  [+ Generate Content] [📚 Browse Goals]│
+│  [+ New Learning Goal]                  │
 └─────────────────────────────────────────┘
 ```
 
 **Key Elements**:
-- **Streak counter** (prominent, animated)
-- **Today's challenge** (personalized, actionable)
-- **Active Learning Goals** (grouped progress view)
-- **Recent achievements** (visual badges)
-- **Quick actions** (FAB or prominent buttons)
+- **Learning goal cards** (title, icon, deck count, total cards)
+- **Progress bars** (percentage of cards mastered)
+- **Last studied timestamp** (helps user prioritize)
+- **Completed goals section** (collapsible, archived)
+- **New goal button** (prominent, easy to find)
+- **Search** (find goals quickly as list grows)
 
 **Interactions**:
-- Tap challenge → Start learning session
-- Tap learning goal → View goal detail with all decks
-- Tap achievement → View achievement detail
-- Pull to refresh → Update stats
+- Tap goal → Open goal detail with all decks
+- Long press goal → Options (edit, archive, delete, export)
+- Tap "+ New Learning Goal" → Create goal flow
+- Pull to refresh → Update progress stats
+- Swipe goal card → Quick actions (continue learning, edit)
+
+**Empty State** (First Launch):
+```
+┌─────────────────────────────────────────┐
+│  Welcome to Skill Forge!                │
+│                                         │
+│  Start your learning journey            │
+│                                         │
+│  [Icon: Empty notebook]                 │
+│                                         │
+│  Create your first learning goal        │
+│  to organize your study materials       │
+│                                         │
+│  Examples:                              │
+│  • Learn Spanish for vacation           │
+│  • Master Python basics                 │
+│  • Study Japanese through anime         │
+│                                         │
+│  [Create Your First Goal]               │
+└─────────────────────────────────────────┘
+```
 
 ---
 
-### 2. Generate Content Screen
+### 2. Create Learning Goal Flow
 
-**Purpose**: Make content generation effortless and intuitive
+**Purpose**: Guide users to create structured, meaningful learning goals
 
-**Workflow A: No Setup (Copy/Paste)**
-
+**Step 1: Goal Details**
 ```
-Step 1: Learning Goal & Topic Selection
 ┌─────────────────────────────────────────┐
-│  ← Generate Content                     │
-│                                         │
-│  Learning Goal (optional)               │
-│  ┌─────────────────────────────────┐  │
-│  │ 🇯🇵 Japanese - One Piece   [▼]  │  │
-│  └─────────────────────────────────┘  │
-│  [+ Create New Goal]                    │
+│  ← Create Learning Goal                 │
 │                                         │
 │  What do you want to learn?             │
 │  ┌─────────────────────────────────┐  │
-│  │ Dialogue phrases from episode 5  │  │
+│  │ Spanish for Travel              │  │
 │  └─────────────────────────────────┘  │
 │                                         │
-│  Popular Topics:                        │
-│  [Languages] [Programming] [History]    │
-│  [Science]   [Math]        [Business]   │
+│  Icon (optional)                        │
+│  🇪🇸 🌍 ✈️ 📚 💼 🏠 🎵 🎮 💻 ⚽       │
 │                                         │
-│  How many items?                        │
-│  ○ 10   ● 20   ○ 50                     │
+│  Description (optional)                 │
+│  ┌─────────────────────────────────┐  │
+│  │ Learn conversational Spanish    │  │
+│  │ for my trip to Barcelona        │  │
+│  └─────────────────────────────────┘  │
 │                                         │
-│  Difficulty:                            │
-│  ○ Beginner  ● Intermediate  ○ Advanced │
+│  Target Completion (optional)           │
+│  ┌─────────────────────────────────┐  │
+│  │ 3 months           [calendar▼]  │  │
+│  └─────────────────────────────────┘  │
 │                                         │
-│  Content Type:                          │
-│  ● Flashcards  ○ Q&A  ○ Examples        │
+│  Common Goal Templates:                 │
+│  [Language] [Programming] [Academic]    │
+│  [Hobby] [Professional] [Creative]      │
+│                                         │
+│            [Create Goal]                │
+└─────────────────────────────────────────┘
+```
+
+**Step 2: Goal Created - Next Actions**
+```
+┌─────────────────────────────────────────┐
+│  ✓ Goal Created!                        │
+│                                         │
+│  🇪🇸 Spanish for Travel                 │
+│                                         │
+│  Your goal is ready. Now let's add      │
+│  some learning content.                 │
+│                                         │
+│  [Generate Content with AI]             │
+│  Create decks using AI prompts          │
+│                                         │
+│  [Create Empty Deck]                    │
+│  Add cards manually                     │
+│                                         │
+│  [Do This Later]                        │
+└─────────────────────────────────────────┘
+```
+
+**Key Design Decisions**:
+- **Goal name is required** (forces intentionality)
+- **Icon adds personality** (makes goals memorable)
+- **Description adds context** (helps user remember purpose)
+- **Target date is optional** (some goals are ongoing)
+- **Templates speed setup** (common goal types pre-configured)
+- **Immediate next action** (guide to add content right away)---
+
+### 3. Goal Detail Screen
+
+**Purpose**: Show all decks within a goal, manage goal content
+
+**Layout**:
+```
+┌─────────────────────────────────────────┐
+│  ← 🇯🇵 Japanese - One Piece       [•••] │
+│                                         │
+│  Progress                               │
+│  ████████░░░░  65% complete             │
+│  98 / 150 cards mastered                │
+│                                         │
+│  Decks in this goal                     │
+│  ┌─────────────────────────────────┐  │
+│  │ Episode 1-5 Dialogue            │  │
+│  │ 50 cards • 33 mastered          │  │
+│  │ Last studied: Today             │  │
+│  │               [Practice Now ▶]  │  │
+│  └─────────────────────────────────┘  │
+│  ┌─────────────────────────────────┐  │
+│  │ Basic Grammar Patterns          │  │
+│  │ 45 cards • 30 mastered          │  │
+│  │ Last studied: Yesterday         │  │
+│  │               [Practice Now ▶]  │  │
+│  └─────────────────────────────────┘  │
+│  ┌─────────────────────────────────┐  │
+│  │ Character Names & Terms         │  │
+│  │ 55 cards • 35 mastered          │  │
+│  │ Last studied: 3 days ago        │  │
+│  │               [Practice Now ▶]  │  │
+│  └─────────────────────────────────┘  │
+│                                         │
+│  [+ Add New Deck]                       │
+│  [Generate Content with AI]             │
+└─────────────────────────────────────────┘
+```
+
+**Key Elements**:
+- **Goal progress** (aggregated across all decks)
+- **Deck list** (all decks belonging to this goal)
+- **Deck progress** (individual mastery percentage)
+- **Quick practice** (start learning immediately)
+- **Add deck options** (manual or AI-generated)
+
+**Goal Menu [•••]**:
+- Edit goal details
+- View detailed statistics
+- Export all decks in goal
+- Archive goal
+- Delete goal
+
+**Interactions**:
+- Tap deck card → Open deck detail
+- Tap "Practice Now" → Start flashcard session
+- Tap "+ Add New Deck" → Create empty deck
+- Tap "Generate Content" → Launch AI generation flow
+- Long press deck → Options (rename, move, delete, export)
+
+---
+
+### 4. Generate Content Screen (Updated Flow)
+
+**Purpose**: Generate AI content always within a learning goal context
+
+**Step 1: Select Learning Goal (Required)**
+```
+┌─────────────────────────────────────────┐
+│  ← Generate Content                     │
+│                                         │
+│  Which goal is this content for?        │
+│                                         │
+│  ┌─────────────────────────────────┐  │
+│  │ 🇯🇵 Japanese - One Piece        │  │
+│  │ 3 decks • 150 cards             │  │
+│  └─────────────────────────────────┘  │
+│  ┌─────────────────────────────────┐  │
+│  │ 💻 Python Fundamentals          │  │
+│  │ 2 decks • 85 cards              │  │
+│  └─────────────────────────────────┘  │
+│  ┌─────────────────────────────────┐  │
+│  │ 🇪🇸 Spanish for Travel          │  │
+│  │ 4 decks • 200 cards             │  │
+│  └─────────────────────────────────┘  │
+│                                         │
+│  [+ Create New Goal]                    │
+└─────────────────────────────────────────┘
+
+Step 2: Define Topic & Parameters
+┌─────────────────────────────────────────┐
+│  ← Generate Content                     │
+│                                         │
+│  Goal: 🇯🇵 Japanese - One Piece         │
+│                                         │
+│  What specific topic?                   │
+│  ┌─────────────────────────────────┐  │
+│  │ Dialogue from episode 10        │  │
+│  └─────────────────────────────────┘  │
+│                                         │
+│  Number of items                        │
+│  ○ 10   ● 20   ○ 50   ○ Custom         │
+│                                         │
+│  Difficulty level                       │
+│  ○ Beginner  ● Intermediate  ○ Advanced│
+│                                         │
+│  Content type                           │
+│  ● Flashcards  ○ Q&A  ○ Fill-in-blank  │
+│                                         │
+│  Additional context (optional)          │
+│  ┌─────────────────────────────────┐  │
+│  │ Focus on common phrases used by │  │
+│  │ Luffy and crew members          │  │
+│  └─────────────────────────────────┘  │
 │                                         │
 │  [Generate Prompt]                      │
 └─────────────────────────────────────────┘
 
-Step 2: Share Prompt to LLM
+Step 3: Share Prompt to LLM
 ┌─────────────────────────────────────────┐
 │  ← Generate Content                     │
 │                                         │
@@ -203,44 +413,44 @@ Step 2: Share Prompt to LLM
 │                                         │
 │  ┌─────────────────────────────────┐  │
 │  │ Generate 20 Japanese dialogue   │  │
-│  │ phrases from One Piece episode 5│  │
-│  │ at intermediate level.          │  │
+│  │ phrases from One Piece episode  │  │
+│  │ 10 at intermediate level.       │  │
 │  │                                 │  │
-│  │ Format each as:                 │  │
-│  │ Front: Japanese phrase          │  │
+│  │ Format each flashcard as:       │  │
+│  │ Front: Japanese phrase (romaji) │  │
 │  │ Back: English translation +     │  │
 │  │       context from scene        │  │
+│  │                                 │  │
+│  │ Focus on phrases used by Luffy  │  │
+│  │ and crew members.               │  │
 │  │                                 │  │
 │  │ [Copy Prompt] 📋                │  │
 │  └─────────────────────────────────┘  │
 │                                         │
-│  Share prompt to your LLM app:          │
-│  [📤 Share to LLM App]                  │
+│  Share to your LLM app:                 │
+│  [📤 Share to App]                      │
 │                                         │
-│  (Android will show your installed apps)│
-│                                         │
-│  Or paste content if already generated: │
+│  Or paste content if ready:             │
 │  [Paste Content]                        │
 └─────────────────────────────────────────┘
 
-Step 3: Import Content
+Step 4: Import Content
 ┌─────────────────────────────────────────┐
 │  ← Import Content                       │
 │                                         │
-│  Paste LLM response here:               │
+│  Paste the LLM response here:           │
 │  ┌─────────────────────────────────┐  │
 │  │                                 │  │
-│  │ (User pastes content)           │  │
-│  │                                 │  │
+│  │ [Paste area - multi-line]       │  │
 │  │                                 │  │
 │  │                                 │  │
 │  │                                 │  │
 │  └─────────────────────────────────┘  │
 │                                         │
-│  [Import]                               │
+│  [Parse & Preview]                      │
 └─────────────────────────────────────────┘
 
-Step 4: Preview & Confirm
+Step 5: Preview & Save
 ┌─────────────────────────────────────────┐
 │  ← Review Content                       │
 │                                         │
@@ -248,248 +458,183 @@ Step 4: Preview & Confirm
 │                                         │
 │  Preview:                               │
 │  ┌─────────────────────────────────┐  │
-│  │ Front: 海賊王に俺はなる！       │  │
+│  │ Front: Kaizoku ou ni ore wa naru│  │
 │  │ Back: I'm going to be King of   │  │
 │  │       the Pirates!              │  │
-│  │       (Luffy's catchphrase)     │  │
+│  │       (Luffy's signature line)  │  │
+│  │                            [✓]  │  │
 │  └─────────────────────────────────┘  │
 │  ┌─────────────────────────────────┐  │
-│  │ Front: 仲間を守る！             │  │
-│  │ Back: Protect my crew!          │  │
-│  │       (Episode 5, battle scene) │  │
+│  │ Front: Nakama                   │  │
+│  │ Back: Crewmate/Friend           │  │
+│  │       (Important concept in OP) │  │
+│  │                            [✓]  │  │
 │  └─────────────────────────────────┘  │
 │                                         │
-│  Learning Goal:                         │
-│  🇯🇵 Japanese - One Piece               │
+│  [Tap cards to edit]                    │
 │                                         │
 │  Save to:                               │
-│  ● New Deck: [One Piece Ep 5_____]     │
-│  ○ Existing Deck: [Select Deck ▼]      │
+│  Goal: 🇯🇵 Japanese - One Piece         │
+│  ● New Deck: [Episode 10_______]       │
+│  ○ Existing: [Select Deck ▼]           │
 │                                         │
-│  [Add to Deck]  [Edit Content]          │
+│  [Save to Goal]                         │
 └─────────────────────────────────────────┘
 
-Step 5: Success & Next Action
+Step 6: Success
 ┌─────────────────────────────────────────┐
 │  ✓ Content Added!                       │
 │                                         │
-│  20 cards added to "One Piece Ep 5"     │
+│  20 cards added to "Episode 10"         │
+│  in goal: 🇯🇵 Japanese - One Piece      │
+│                                         │
+│  [Start Practicing]  [Back to Goal]     │
+└─────────────────────────────────────────┘
+```
+
+**Key Design Changes**:
+- **Goal selection is first step** (enforces structure)
+- **Cannot generate orphan content** (everything has a home)
+- **Goal context shown throughout flow** (user always knows where content goes)
+- **Deck selection at end** (choose existing or create new within goal)
+
+---
+
+### 5. Deck Detail & Practice Selection
+
+**Purpose**: Choose how to study a specific deck
+
+```
+┌─────────────────────────────────────────┐
+│  ← Episode 1-5 Dialogue          [•••]  │
+│                                         │
 │  Goal: 🇯🇵 Japanese - One Piece         │
-│                                         │
-│  [Start Learning]  [Generate More]      │
-└─────────────────────────────────────────┘
-```
-
-**Workflow B: Automated (Provider Configured)**
-
-```
-Step 1: Same topic selection
-
-Step 2: Automated Generation
-┌─────────────────────────────────────────┐
-│  ← Generating Content                   │
-│                                         │
-│  Using: OpenAI GPT-4                    │
-│                                         │
-│  ┌─────────────────────────────────┐  │
-│  │                                 │  │
-│  │     [Animated Loading]          │  │
-│  │                                 │  │
-│  │  Generating 20 Spanish verbs... │  │
-│  │                                 │  │
-│  └─────────────────────────────────┘  │
-└─────────────────────────────────────────┘
-
-Step 3: Same preview & confirm
-```
-
----
-
-### 3. Learn Screen - Learning Goals & Decks
-
-**Purpose**: Quick access to all learning content organized by goals
-
-```
-┌─────────────────────────────────────────┐
-│  Learn                        [Search] │
-│                                         │
-│  View: [●Goals] [○All Decks]            │
-│  Filter: [All▼] [Recent] [Due]         │
-│                                         │
-│  ┌─────────────────────────────────┐  │
-│  │ 🇯🇵 Japanese - One Piece   [▼] │  │
-│  │ 3 decks • 12 due • 40% progress │  │
-│  └─────────────────────────────────┘  │
-│    ┌───────────────────────────────┐  │
-│    │ One Piece Ep 1-5         [•••]│  │
-│    │ 50 cards • 8 due              │  │
-│    └───────────────────────────────┘  │
-│    ┌───────────────────────────────┐  │
-│    │ Japanese Grammar         [•••]│  │
-│    │ 30 cards • 4 due              │  │
-│    └───────────────────────────────┘  │
-│                                         │
-│  ┌─────────────────────────────────┐  │
-│  │ 💻 Python Fundamentals     [▼] │  │
-│  │ 2 decks • 5 due • 25% progress  │  │
-│  └─────────────────────────────────┘  │
-│    ┌───────────────────────────────┐  │
-│    │ Python Basics            [•••]│  │
-│    │ 35 cards • 3 due              │  │
-│    └───────────────────────────────┘  │
-│    ┌───────────────────────────────┐  │
-│    │ Functions & Classes      [•••]│  │
-│    │ 25 cards • 2 due              │  │
-│    └───────────────────────────────┘  │
-│                                         │
-│  [+ Generate New Content]               │
-└─────────────────────────────────────────┘
-```
-
-**Key Elements**:
-- **Learning Goals** (collapsible groups with aggregate stats)
-- **Deck cards** (nested under goals, show progress, due count)
-- **View toggle** (Goals view or flat All Decks view)
-- **Filter options** (all, recent, due cards)
-- **Search** (quick find across goals and decks)
-- **Context menu** (edit, export, delete)
-
-**Interactions**:
-- Tap goal header → Expand/collapse to show/hide decks
-- Tap deck → Open deck detail with widget selection
-- Tap [•••] → Show options (rename, export, delete, share)
-- Toggle view → Switch between Goals and All Decks
-- Long press → Multi-select mode
-- Pull to refresh → Update due card counts
-
----
-
-### 4. Deck Detail & Widget Selection
-
-**Purpose**: Choose how to practice the deck
-
-```
-┌─────────────────────────────────────────┐
-│  ← Spanish Verbs               [•••]    │
-│                                         │
-│  50 cards • 12 due • 80% mastered       │
+│  50 cards • 33 mastered (66%)           │
 │                                         │
 │  How do you want to practice?           │
 │                                         │
 │  ┌─────────────────────────────────┐  │
 │  │ 📇 Flashcards                   │  │
 │  │ Classic card flipping           │  │
-│  │ [Practice All] [Due Cards Only] │  │
+│  │ [Study All] [Review Unmastered] │  │
 │  └─────────────────────────────────┘  │
 │                                         │
 │  ┌─────────────────────────────────┐  │
-│  │ ❓ Quiz                         │  │
-│  │ Multiple choice & more          │  │
+│  │ ❓ Quiz Mode                    │  │
+│  │ Test your knowledge             │  │
 │  │ [Start Quiz]                    │  │
 │  └─────────────────────────────────┘  │
 │                                         │
-│  ┌─────────────────────────────────┐  │
-│  │ 🔄 Spaced Repetition            │  │
-│  │ Smart review based on memory    │  │
-│  │ 12 cards due today              │  │
-│  │ [Review Now]                    │  │
-│  └─────────────────────────────────┘  │
+│  Deck contents                          │
+│  [View All Cards]                       │
 │                                         │
-│  ┌─────────────────────────────────┐  │
-│  │ 🎯 Challenge Mode               │  │
-│  │ Timed progressive levels        │  │
-│  │ [Start Challenge]               │  │
-│  └─────────────────────────────────┘  │
-│                                         │
-│  Deck Actions:                          │
-│  [Export] [Edit Cards] [Settings]       │
+│  Statistics                             │
+│  Mastery: 33/50 cards (66%)             │
+│  Created: 2 weeks ago                   │
+│  Last studied: Today                    │
+│  Total study time: 2h 15m               │
 └─────────────────────────────────────────┘
 ```
 
+**Deck Menu [•••]**:
+- Edit deck name
+- Add cards manually
+- Generate more content
+- Export deck
+- Move to different goal
+- Delete deck
+
+**Key Simplifications**:
+- **Removed gamification widgets** (challenges, XP, streaks)
+- **Simple practice modes** (flashcards and quiz only)
+- **Focus on progress** (mastery percentage, not points)
+- **Clear statistics** (time spent, mastery rate)
 ---
 
-### 5. Learning Widget: Flashcards
+### 6. Progress Screen
 
-**Purpose**: Classic card-flipping practice with performance tracking
+**Purpose**: Track learning progress across all goals
 
 ```
-Card Front View
 ┌─────────────────────────────────────────┐
-│  ← Spanish Verbs            12/50  [•••]│
+│  Progress                    [Export]   │
 │                                         │
+│  Overall Statistics                     │
+│  ┌─────────────────────────────────┐  │
+│  │ Total study time: 24h 35m       │  │
+│  │ Total cards: 435                │  │
+│  │ Cards mastered: 287 (66%)       │  │
+│  │ Active goals: 3                 │  │
+│  └─────────────────────────────────┘  │
 │                                         │
+│  Goals Progress                         │
+│  ┌─────────────────────────────────┐  │
+│  │ 🇯🇵 Japanese - One Piece        │  │
+│  │ ████████░░░░  65% complete      │  │
+│  │ 98/150 cards • 18h study time   │  │
+│  └─────────────────────────────────┘  │
+│  ┌─────────────────────────────────┐  │
+│  │ 💻 Python Fundamentals          │  │
+│  │ ████░░░░░░░░  32% complete      │  │
+│  │ 27/85 cards • 4h study time     │  │
+│  └─────────────────────────────────┘  │
+│  ┌─────────────────────────────────┐  │
+│  │ 🇪🇸 Spanish for Travel          │  │
+│  │ ██░░░░░░░░░░  18% complete      │  │
+│  │ 36/200 cards • 2h 35m study     │  │
+│  └─────────────────────────────────┘  │
 │                                         │
-│           Hablar                        │
+│  Recent Activity                        │
+│  Today: 45 minutes                      │
+│  This week: 5h 20m                      │
+│  This month: 18h 15m                    │
 │                                         │
-│                                         │
-│           [Tap to reveal]               │
-│                                         │
-│                                         │
-│  Progress: ████░░░░░░░░░░░░  24%        │
-│                                         │
-│  [Shuffle] [🔊 Speak]                   │
-└─────────────────────────────────────────┘
-│  [◀ Previous]  [Show Answer]  [Next ▶] │
-└─────────────────────────────────────────┘
-
-Card Back View (After Tap/Swipe)
-┌─────────────────────────────────────────┐
-│  ← Spanish Verbs            12/50  [•••]│
-│                                         │
-│  Hablar                                 │
-│                                         │
-│  ──────────────────                     │
-│                                         │
-│  To speak                               │
-│                                         │
-│  Example:                               │
-│  "Yo hablo español"                     │
-│  (I speak Spanish)                      │
-│                                         │
-│  How well did you know this?            │
-│  [😰 Hard] [😊 Medium] [😎 Easy]        │
-└─────────────────────────────────────────┘
-│  [◀ Previous]  [Hide Answer]  [Next ▶] │
+│  [View Detailed Analytics]              │
 └─────────────────────────────────────────┘
 ```
 
-**Interactions**:
-- **Tap card** → Flip to reveal answer
-- **Swipe left** → Next card
-- **Swipe right** → Previous card
-- **Swipe up** → Mark as "Easy" (optional gesture)
-- **Swipe down** → Mark as "Hard" (optional gesture)
-- **Tap 🔊** → Text-to-speech pronunciation
-- **Tap [•••]** → Options (edit card, report issue, skip)
+**Key Elements**:
+- **Overall stats** (aggregate across all goals)
+- **Goal progress bars** (visual representation)
+- **Study time tracking** (per goal and total)
+- **Recent activity summary** (daily, weekly, monthly)
+- **Export option** (backup all data)
 
-**Visual Feedback**:
-- Smooth flip animation (300ms)
-- Progress bar updates in real-time
-- Button states show clearly (pressed, hover)
-- Dark theme optimized colors
-
----
-
-### 6. Learning Widget: Quiz Mode
-
-**Purpose**: Active recall testing with immediate feedback
-
+**Detailed Analytics View**:
 ```
-Quiz Question
 ┌─────────────────────────────────────────┐
-│  ← Spanish Verbs Quiz     Question 3/10 │
+│  ← 🇯🇵 Japanese - One Piece             │
 │                                         │
-│  What does "Comer" mean?                │
+│  Progress Overview                      │
+│  ████████░░░░  65% complete             │
+│  98/150 cards mastered                  │
 │                                         │
-│  ○ To speak                             │
-│  ○ To write                             │
-│  ○ To eat                               │
-│  ○ To run                               │
+│  Study Time                             │
+│  [Bar chart showing daily activity]     │
+│  Total: 18 hours                        │
+│  Average: 30 min/day                    │
 │                                         │
-│  [Submit Answer]                        │
+│  Mastery by Deck                        │
+│  Episode 1-5: ████████░░  80%           │
+│  Grammar:     ██████░░░░  60%           │
+│  Characters:  ████░░░░░░  40%           │
 │                                         │
-│  Timer: 15s    Score: 2/2 (100%)        │
+│  Performance Trends                     │
+│  Accuracy: 78% (↑ 5% this week)         │
+│  Retention: 82%                         │
+│                                         │
+│  Milestones                             │
+│  ✓ First 50 cards mastered              │
+│  ✓ 7 days of study                      │
+│  ○ 100 cards mastered (98/100)          │
 └─────────────────────────────────────────┘
+```
+
+**Key Simplifications**:
+- **Removed gamification** (no XP, levels, badges, streaks)
+- **Focus on actual progress** (mastery %, time invested)
+- **Simple milestones** (achievement markers, not rewards)
+- **Clear data** (charts show trends, not competitions)
 
 Correct Answer Feedback
 ┌─────────────────────────────────────────┐
@@ -552,207 +697,130 @@ Quiz Complete
 │  Stats                         [Filter] │
 │                                         │
 │  Overview (This Week)                   │
-│  ┌─────────────────────────────────┐  │
-│  │ 🔥 Streak: 7 days               │  │
-│  │ 📚 Cards Learned: 145           │  │
-│  │ ⏱ Time Spent: 3h 24m            │  │
-│  │ 🎯 Quizzes Completed: 12        │  │
-│  │ ⭐ XP Earned: 1,450              │  │
-│  └─────────────────────────────────┘  │
-│                                         │
-│  Activity Calendar                      │
-│  ┌─────────────────────────────────┐  │
-│  │ Jan 2026                        │  │
-│  │ M  T  W  T  F  S  S             │  │
-│  │    1  2  3  4  5  6             │  │
-│  │ 🟩 🟩 🟩 🟩 🟩 🟩 🟩             │  │
-│  │ 7  8  9 10 11 12 13             │  │
-│  │ 🟩 ⬜ ⬜ ⬜ ⬜ ⬜ ⬜             │  │
-│  └─────────────────────────────────┘  │
-│                                         │
-│  Achievements (15/25)                   │
-│  🏆 🏆 🏆 ⭐ ⭐                         │
-│  [View All Achievements]                │
-│                                         │
-│  Learning Goals Progress                │
-│  ┌─────────────────────────────────┐  │
-│  │ 🇯🇵 Japanese - One Piece         │  │
-│  │ 3 decks  ████░░░░  40%           │  │
-│  │ 💻 Python Fundamentals           │  │
-│  │ 2 decks  ██░░░░░░  25%           │  │
-│  │ 📚 History - Ancient Rome        │  │
-│  │ 1 deck   ██████░░  65%           │  │
-│  └─────────────────────────────────┘  │
-│                                         │
-│  Learning Insights                      │
-│  • Best time: Morning (9-11am)          │
-│  • Strongest: Spanish vocabulary        │
-│  • Focus area: Python syntax            │
-└─────────────────────────────────────────┘
-```
-
-**Charts & Visualizations**:
-- Heatmap calendar (GitHub-style activity)
-- Line chart (learning over time)
-- Pie chart (time per deck)
-- Bar chart (quiz scores)
-
 ---
 
-### 8. Achievements Detail Screen
+### 7. More Screen (Settings & Data Management)
 
-**Purpose**: Showcase earned badges and motivate completion
-
-```
-┌─────────────────────────────────────────┐
-│  ← Achievements                15/25    │
-│                                         │
-│  Recently Unlocked                      │
-│  ┌─────────────────────────────────┐  │
-│  │      🏆                         │  │
-│  │   Quiz Master                   │  │
-│  │ Scored 90%+ on a quiz           │  │
-│  │ Unlocked: Jan 6, 2026           │  │
-│  └─────────────────────────────────┘  │
-│                                         │
-│  In Progress                            │
-│  ┌─────────────────────────────────┐  │
-│  │      ⭐                         │  │
-│  │   Consistent Learner            │  │
-│  │ 7-day streak                    │  │
-│  │ Progress: ████████░░  7/7       │  │
-│  └─────────────────────────────────┘  │
-│                                         │
-│  Locked                                 │
-│  ┌─────────────────────────────────┐  │
-│  │      🔒                         │  │
-│  │   Polyglot                      │  │
-│  │ Master 3 languages              │  │
-│  │ Progress: ████░░░░░░  1/3       │  │
-│  └─────────────────────────────────┘  │
-│                                         │
-│  ┌─────────────────────────────────┐  │
-│  │      🔒                         │  │
-│  │   Power User                    │  │
-│  │ Generate 50+ LLM cards          │  │
-│  │ Progress: ██████░░░░  32/50     │  │
-│  └─────────────────────────────────┘  │
-└─────────────────────────────────────────┘
-```
-
-**Achievement Categories**:
-- **Practice**: Flashcard completions, quiz scores
-- **Consistency**: Streaks, daily challenges
-- **Content**: Cards generated, decks created
-- **Mastery**: 100% completion, perfect scores
-- **Community** (future): Shared decks, P2P
-
----
-
-### 9. Learning Goals Management
-
-**Purpose**: Create, edit, and organize learning goals
+**Purpose**: Customize app preferences and manage learning goals
 
 ```
 ┌─────────────────────────────────────────┐
-│  ← Learning Goals                       │
+│  More                                   │
 │                                         │
-│  Your Goals (3)                         │
-│                                         │
+│  Learning Goals                         │
 │  ┌─────────────────────────────────┐  │
-│  │ 🇯🇵 Japanese - One Piece        │  │
-│  │ 3 decks • 100 cards              │  │
-│  │ Created: Dec 15, 2025            │  │
-│  │ [Edit] [Delete]                  │  │
+│  │ Manage Goals                    │  │
+│  │ Create, edit, or archive goals  │  │
 │  └─────────────────────────────────┘  │
 │                                         │
+│  App Settings                           │
 │  ┌─────────────────────────────────┐  │
-│  │ 💻 Python Fundamentals          │  │
-│  │ 2 decks • 60 cards               │  │
-│  │ Created: Dec 20, 2025            │  │
-│  │ [Edit] [Delete]                  │  │
+│  │ Appearance                      │  │
+│  │ Dark theme • Display options    │  │
 │  └─────────────────────────────────┘  │
-│                                         │
 │  ┌─────────────────────────────────┐  │
-│  │ 📚 History - Ancient Rome       │  │
-│  │ 1 deck • 28 cards                │  │
-│  │ Created: Jan 2, 2026             │  │
-│  │ [Edit] [Delete]                  │  │
+│  │ Learning Preferences            │  │
+│  │ TTS, quiz timer, auto-play      │  │
 │  └─────────────────────────────────┘  │
-│                                         │
-│  [+ Create New Goal]                    │
-└─────────────────────────────────────────┘
-
-Create/Edit Goal Dialog
-┌─────────────────────────────────────────┐
-│  Create Learning Goal                   │
-│                                         │
-│  Goal Name                              │
 │  ┌─────────────────────────────────┐  │
-│  │ Japanese through One Piece       │  │
-│  └─────────────────────────────────┘  │
-│                                         │
-│  Icon (optional)                        │
-│  🇯🇵 [📚] [💻] [🎨] [🔬] [More...]      │
-│                                         │
-│  Description (optional)                 │
-│  ┌─────────────────────────────────┐  │
-│  │ Learning Japanese using phrases │  │
-│  │ and vocabulary from One Piece   │  │
-│  │ anime episodes                  │  │
-│  └─────────────────────────────────┘  │
-│                                         │
-│  [Cancel]               [Create Goal]   │
-└─────────────────────────────────────────┘
-```
-
----
-
-### 10. Settings & More Screen
-
-**Purpose**: Customize app behavior and manage data
-
-```
-┌─────────────────────────────────────────┐
-│  ← Settings                             │
-│                                         │
-│  Appearance                             │
-│  ┌─────────────────────────────────┐  │
-│  │ Dark Theme            [●]       │  │
-│  │ Follow system          [○]       │  │
-│  └─────────────────────────────────┘  │
-│                                         │
-│  Learning                               │
-│  ┌─────────────────────────────────┐  │
-│  │ Text-to-Speech        [●]       │  │
-│  │ Voice Speed           [1.0x ▼]  │  │
-│  │ Auto-play Audio       [○]       │  │
-│  │ Quiz Timer            [●]       │  │
-│  │ Daily Goal            [20 cards]│  │
-│  └─────────────────────────────────┘  │
-│                                         │
-│  LLM Integration (Optional)             │
-│  ┌─────────────────────────────────┐  │
-│  │ Provider              [Not Set ▼]│ │
-│  │ [Configure OpenAI]              │  │
-│  │ [Configure OpenRouter]          │  │
-│  │ [Configure Ollama]              │  │
-│  │ [Configure Portkey]             │  │
+│  │ LLM Provider (Optional)         │  │
+│  │ Configure API integrations      │  │
 │  └─────────────────────────────────┘  │
 │                                         │
 │  Data Management                        │
 │  ┌─────────────────────────────────┐  │
-│  │ [Export All Data]               │  │
-│  │ [Import Data]                   │  │
-│  │ [Backup Settings]               │  │
+│  │ Export All Data                 │  │
+│  │ Backup your learning content    │  │
+│  └─────────────────────────────────┘  │
+│  ┌─────────────────────────────────┐  │
+│  │ Import Data                     │  │
+│  │ Restore from backup             │  │
 │  └─────────────────────────────────┘  │
 │                                         │
-│  Notifications                          │
+│  Help & Support                         │
 │  ┌─────────────────────────────────┐  │
-│  │ Daily Reminders       [●]       │  │
-│  │ Reminder Time         [9:00 AM ▼]│ │
-│  │ Streak Alerts         [●]       │  │
+│  │ User Guide                      │  │
+│  │ Privacy Policy                  │  │
+│  │ About Skill Forge               │  │
+│  │ Version 1.0.0                   │  │
 │  └─────────────────────────────────┘  │
+└─────────────────────────────────────────┘
+```
+
+**Settings Detail - Appearance**:
+```
+┌─────────────────────────────────────────┐
+│  ← Appearance                           │
+│                                         │
+│  Theme                                  │
+│  ○ Light                                │
+│  ● Dark                                 │
+│  ○ Follow system                        │
+│                                         │
+│  Display                                │
+│  Font size          [Medium ▼]          │
+│  Card animation     [On]                │
+│  Reduce motion      [Off]               │
+└─────────────────────────────────────────┘
+```
+
+**Settings Detail - Learning Preferences**:
+```
+┌─────────────────────────────────────────┐
+│  ← Learning Preferences                 │
+│                                         │
+│  Audio                                  │
+│  Text-to-speech     [●]                 │
+│  TTS voice          [System default ▼]  │
+│  Voice speed        [1.0x]              │
+│  Auto-play audio    [○]                 │
+│                                         │
+│  Quiz                                   │
+│  Enable timer       [●]                 │
+│  Time per question  [30 seconds]        │
+│  Shuffle questions  [●]                 │
+│                                         │
+│  Practice                               │
+│  Cards per session  [20]                │
+│  Show progress bar  [●]                 │
+└─────────────────────────────────────────┘
+```
+
+**Settings Detail - LLM Provider (Optional)**:
+```
+┌─────────────────────────────────────────┐
+│  ← LLM Provider Configuration           │
+│                                         │
+│  Current: Not configured                │
+│  Using copy/paste workflow              │
+│                                         │
+│  Optional: Configure API Access         │
+│  ┌─────────────────────────────────┐  │
+│  │ OpenAI                          │  │
+│  │ GPT-4, GPT-3.5                  │  │
+│  │               [Configure >]     │  │
+│  └─────────────────────────────────┘  │
+│  ┌─────────────────────────────────┐  │
+│  │ OpenRouter                      │  │
+│  │ Access multiple models          │  │
+│  │               [Configure >]     │  │
+│  └─────────────────────────────────┘  │
+│  ┌─────────────────────────────────┐  │
+│  │ Ollama (Local)                  │  │
+│  │ Run models on device            │  │
+│  │               [Configure >]     │  │
+│  └─────────────────────────────────┘  │
+│  ┌─────────────────────────────────┐  │
+│  │ Portkey                         │  │
+│  │ LLM gateway                     │  │
+│  │               [Configure >]     │  │
+│  └─────────────────────────────────┘  │
+│                                         │
+│  Note: API configuration is completely  │
+│  optional. The copy/paste workflow      │
+│  works with any LLM without setup.      │
+└─────────────────────────────────────────┘
+```
 │                                         │
 │  About                                  │
 │  Version 1.0.0                          │
@@ -1158,43 +1226,41 @@ Level 4  ████████░░░░░░░░  1,450 / 2,000 XP  Lev
 
 ## 🚨 Error Handling
 
-### Network Error (Provider API)
-```
-┌─────────────────────────────────────────┐
-│  ⚠️ Connection Error                    │
-│                                         │
-│  Unable to connect to OpenAI.           │
-│  Please check your connection or        │
-│  use copy/paste workflow.               │
-│                                         │
-│  [Try Again] [Use Copy/Paste]           │
-└─────────────────────────────────────────┘
-```
-
 ### Import Parse Error
 ```
 ┌─────────────────────────────────────────┐
 │  ⚠️ Format Not Recognized               │
 │                                         │
 │  We couldn't parse the pasted content.  │
-│  Please check the format or try         │
-│  generating a new prompt.               │
+│  Please check the format and try again. │
 │                                         │
-│  [Edit Content] [Generate New Prompt]   │
+│  [Edit Content] [Try Again]             │
 └─────────────────────────────────────────┘
 ```
 
-### Streak About to Break
+### Network Error (Optional API)
 ```
 ┌─────────────────────────────────────────┐
-│  🔥 Streak Alert!                       │
+│  ⚠️ Connection Error                    │
 │                                         │
-│  Only 1 hour left to keep your          │
-│  7-day streak alive!                    │
+│  Unable to connect to API provider.     │
+│  Please check your connection or use    │
+│  the copy/paste workflow instead.       │
 │                                         │
-│  Practice just 1 card to maintain it.   │
+│  [Try Again] [Use Copy/Paste]           │
+└─────────────────────────────────────────┘
+```
+
+### Empty Goal State
+```
+┌─────────────────────────────────────────┐
+│  🎯 Goal Created!                       │
 │                                         │
-│  [Quick Practice]  [Dismiss]            │
+│  Your goal has no content yet.          │
+│  Generate some learning materials       │
+│  to get started.                        │
+│                                         │
+│  [Generate Content] [Add Manual Deck]   │
 └─────────────────────────────────────────┘
 ```
 
@@ -1204,53 +1270,128 @@ Level 4  ████████░░░░░░░░  1,450 / 2,000 XP  Lev
 
 ### Engagement Metrics
 - **Time to First Card**: < 3 minutes from app launch
+- **Content Organization**: 100% of content belongs to a goal
 - **Session Duration**: Average 15+ minutes
 - **Return Rate**: 70%+ users return next day
-- **Widget Usage**: Users try 3+ widget types in first week
 
 ### Usability Metrics
 - **Task Completion**: 95%+ complete content generation flow
-- **Error Rate**: < 5% on content import
 - **Navigation Efficiency**: < 3 taps to any major feature
-- **Help/Support Requests**: < 2% users need help
+- **Goal Adoption**: 90%+ users create at least one goal
+- **Error Rate**: < 5% on content import
 
 ### Satisfaction Metrics
-- **Net Promoter Score**: 50+
 - **User Ratings**: 4.5+ stars
 - **Feature Satisfaction**: 80%+ satisfied with core features
-- **Accessibility Score**: AAA WCAG compliance
-
----
-
-## 🔮 Future UX Enhancements (Post-MVP)
-
-### Phase 2 Features
-- **Collaborative Decks**: Share with friends via P2P
-- **Voice Learning**: Audio-only practice mode
-- **Smart Scheduling**: AI-optimized review times
-- **Custom Widgets**: User-created learning formats
-
-### Phase 3 Features
-- **Social Features**: Friend challenges, leaderboards
-- **Theme Customization**: User-defined color schemes
-- **Widget Gallery**: Community-created widgets
-- **Advanced Analytics**: Learning pattern insights
+- **Accessibility Score**: AA WCAG compliance (AAA target)
+- **Data Control**: 100% data export success rate
 
 ---
 
 ## 📝 Design Principles Summary
 
-1. **Simplicity First**: Core actions in < 3 taps
-2. **Feedback Always**: Every action gets visual response
-3. **Progress Visible**: Users always see their progress
-4. **Dark Theme Default**: OLED-optimized for evening study
-5. **Accessible by Design**: All users can learn effectively
-6. **Delight in Details**: Micro-animations make it fun
-7. **Data Respect**: User owns and controls everything
-8. **Performance Matters**: < 1s load, < 200ms transitions
+### Core Principles
+
+1. **Goal-Oriented Structure**
+   - Every piece of content must belong to a learning goal
+   - Goals provide context and purpose for all learning activities
+   - Clear hierarchy: Goals → Decks → Cards
+
+2. **Simplicity Over Gamification**
+   - Personal learning tool, not a game
+   - Progress measured by actual mastery, not points
+   - No streaks, XP, or competitive elements
+   - Focus on meaningful learning outcomes
+
+3. **User Ownership & Privacy**
+   - All data stored locally on device
+   - Easy export at any time
+   - No account required, no cloud lock-in
+   - User controls all content and data
+
+4. **Flexible Content Generation**
+   - Works with any LLM via copy/paste (no setup needed)
+   - Optional API integration for power users
+   - Clear, structured prompts guide content creation
+   - Content always saved within goal context
+
+5. **Accessible & Inclusive**
+   - High contrast, readable fonts
+   - Text-to-speech support
+   - Keyboard navigation
+   - Dark theme optimized for evening study
+
+6. **Performance Focused**
+   - Fast app launches (< 1s)
+   - Smooth animations (< 200ms transitions)
+   - Efficient data storage
+   - Minimal battery impact
 
 ---
 
-**Document Status**: Ready for prototype development  
-**Next Steps**: Create high-fidelity mockups and interactive prototype  
-**Review Date**: February 2026
+## 🔮 Future Enhancements (Post-MVP)
+
+### Potential Phase 2 Features
+- **Smart review scheduling**: Suggest optimal study times based on user patterns
+- **Deck templates**: Pre-configured goal and deck structures for common topics
+- **Audio-only mode**: Practice while commuting or exercising
+- **Batch operations**: Edit/delete multiple cards at once
+- **Advanced search**: Filter by mastery level, date created, etc.
+
+### Potential Phase 3 Features
+- **Deck sharing**: Export/import decks between users
+- **Voice input**: Create cards by speaking
+- **Image support**: Add images to flashcards
+- **Widget themes**: Customize flashcard appearance
+
+---
+
+## ✅ Readiness Checklist
+
+### Design Complete
+- [x] Information architecture defined
+- [x] All core screens designed
+- [x] User flows documented
+- [x] Error states considered
+- [x] Empty states designed
+- [x] Accessibility requirements specified
+
+### Ready for Development
+- [x] Screen hierarchy clear
+- [x] Navigation patterns established
+- [x] Data structure implied by UI
+- [x] Key interactions specified
+- [x] Success metrics defined
+
+### Next Steps for Implementation
+1. Create Flutter screen widgets based on designs
+2. Implement database schema for Goals → Decks → Cards
+3. Build content generation flow with LLM integration
+4. Develop flashcard and quiz practice widgets
+5. Add progress tracking and statistics
+6. Implement data export/import features
+
+---
+
+**Document Status**: Ready for Development (Version 2.0)  
+**Last Updated**: January 6, 2026  
+**Design Owner**: Experience Designer Team  
+**Next Review**: After MVP release
+
+---
+
+## 📋 Change Log
+
+### Version 2.0 (January 6, 2026)
+- **Major redesign**: Goal-oriented structure
+- **Removed**: Gamification elements (streaks, XP, badges, challenges)
+- **Simplified**: Navigation from 5 to 4 tabs
+- **Added**: Mandatory learning goals for all content
+- **Improved**: Content generation workflow with goal context
+- **Clarified**: Personal learning focus vs. competitive features
+
+### Version 1.0 (Initial)
+- Initial UX design with gamification
+- 5-tab navigation structure
+- Optional learning goals
+- Achievement system
