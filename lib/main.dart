@@ -1,83 +1,82 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
-// Available services (uncomment to use):
-// import 'package:skill_forge/services/storage_service.dart';
-// import 'package:skill_forge/services/network_service.dart';
+import 'database/database.dart';
+import 'providers/providers.dart';
+import 'services/services.dart';
+import 'ui/navigation/app_shell.dart';
+import 'ui/theme/app_theme.dart';
 
-void main() {
-  runApp(const MyApp());
+/// Main entry point for Skill Forge.
+///
+/// Initializes the database, services, and providers before launching the app.
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize services
+  final dbHelper = DatabaseHelper();
+  await dbHelper.initialize();
+
+  final prefsService = PreferencesService();
+  await prefsService.init();
+
+  final ttsService = TtsService(prefsService);
+  await ttsService.init();
+
+  final exportImportService = ExportImportService(dbHelper);
+
+  // Set preferred orientations
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
+  // Set system UI overlay style for dark theme
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.light,
+      systemNavigationBarColor: AppColors.background,
+      systemNavigationBarIconBrightness: Brightness.light,
+    ),
+  );
+
+  runApp(
+    MultiProvider(
+      providers: [
+        // Navigation
+        ChangeNotifierProvider(create: (_) => NavigationProvider()),
+        
+        // Services
+        Provider<PreferencesService>.value(value: prefsService),
+        Provider<TtsService>.value(value: ttsService),
+        Provider<ExportImportService>.value(value: exportImportService),
+        
+        // State providers
+        ChangeNotifierProvider(create: (_) => GoalsProvider(dbHelper)),
+        ChangeNotifierProvider(create: (_) => DecksProvider(dbHelper)),
+        ChangeNotifierProvider(create: (_) => FlashcardsProvider(dbHelper)),
+        ChangeNotifierProvider(create: (_) => StudyProvider(dbHelper)),
+      ],
+      child: const SkillForgeApp(),
+    ),
+  );
 }
 
-/// The root widget of the application.
+/// The root widget of Skill Forge.
 ///
-/// AI CUSTOMIZATION:
-/// - Change `title` to your app name
-/// - Modify `colorScheme` seedColor to change the app's primary color
-/// - Replace `MyHomePage` with your own home screen widget
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+/// Configures the MaterialApp with dark theme and navigation shell.
+class SkillForgeApp extends StatelessWidget {
+  const SkillForgeApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Skill Forge', // app name
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Skill Forge'),
-    );
-  }
-}
-
-/// The home page of the application.
-///
-/// AI CUSTOMIZATION:
-/// - Rename this class and file for your app
-/// - Replace the counter example with your own UI
-/// - Add navigation to other screens as needed
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
+      title: 'Skill Forge',
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.darkTheme,
+      home: const AppShell(),
     );
   }
 }
