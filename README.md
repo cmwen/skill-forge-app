@@ -1,4 +1,4 @@
-# Minimal Android App Template
+# Skill Forge — Minimal Android App Template
 
 A production-ready Android Flutter template with **AI-powered development workflow**, optimized build system, and comprehensive documentation. Start building your Android app in minutes, not hours.
 
@@ -60,8 +60,8 @@ flutter test && flutter analyze
 
 Then customize using AI:
 ```
-@flutter-developer Please rename this app from "min_flutter_template" 
-to "my_awesome_app" with package "com.mycompany.my_awesome_app"
+@flutter-developer Please rename this app from "min_flutter_template"
+to "skill_forge" with package "com.skillforge.app"
 ```
 
 ### Option 3: GitHub Codespaces (No Installation!)
@@ -194,7 +194,7 @@ Complete LLM integration ready to use in your app - no separate package needed!
 ### Quick Start
 
 ```dart
-import 'package:min_flutter_template/ollama_toolkit/ollama_toolkit.dart';
+import 'package:skill_forge/ollama_toolkit/ollama_toolkit.dart';
 
 // Create client
 final client = OllamaClient(baseUrl: 'http://localhost:11434');
