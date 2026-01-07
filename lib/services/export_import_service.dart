@@ -87,18 +87,15 @@ class ExportImportService {
   Future<void> exportAndShare({required ExportFormat format}) async {
     final String content;
     final String filename;
-    final String mimeType;
 
     switch (format) {
       case ExportFormat.json:
         content = await exportAsJson();
         filename = 'skill_forge_backup_${_getTimestamp()}.json';
-        mimeType = 'application/json';
         break;
       case ExportFormat.csv:
         content = await exportAsCsv();
         filename = 'skill_forge_cards_${_getTimestamp()}.csv';
-        mimeType = 'text/csv';
         break;
     }
 

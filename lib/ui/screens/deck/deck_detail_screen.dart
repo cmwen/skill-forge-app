@@ -243,7 +243,6 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
     final decksProvider = context.watch<DecksProvider>();
     final flashcardsProvider = context.watch<FlashcardsProvider>();
     final deck = decksProvider.getDeckById(widget.deckId);
-    final deckStats = decksProvider.getStatsForDeck(widget.deckId);
 
     if (deck == null) {
       return Scaffold(

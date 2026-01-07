@@ -714,9 +714,9 @@ Use simple, clear language appropriate for $_difficulty level learners.''';
             child: Container(
               padding: const EdgeInsets.all(AppSpacing.s),
               decoration: BoxDecoration(
-                color: AppColors.warning.withOpacity(0.1),
+                color: AppColors.warning.withValues(alpha: 0.1),
                 borderRadius: AppRadius.smallBorderRadius,
-                border: Border.all(color: AppColors.warning.withOpacity(0.3)),
+                border: Border.all(color: AppColors.warning.withValues(alpha: 0.3)),
               ),
               child: Row(
                 children: [

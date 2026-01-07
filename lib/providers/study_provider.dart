@@ -6,9 +6,6 @@ import '../models/models.dart';
 class StudyProvider extends ChangeNotifier {
   final DatabaseHelper _db;
 
-  /// Current study session in progress
-  StudySession? _currentSession;
-
   /// Start time of current session
   DateTime? _sessionStartTime;
 

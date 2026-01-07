@@ -20,7 +20,6 @@ class MoreScreen extends StatefulWidget {
 class _MoreScreenState extends State<MoreScreen> {
   @override
   Widget build(BuildContext context) {
-    final prefsService = context.read<PreferencesService>();
     return Scaffold(
       appBar: AppBar(
         title: const Text('More'),
