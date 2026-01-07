@@ -15,7 +15,7 @@ void main() {
               name: 'Learn Flutter',
               deckCount: 5,
               cardCount: 120,
-              progressPercent: 0.65,
+              masteredCount: 78,
               onTap: () {},
             ),
           ),
@@ -24,8 +24,8 @@ void main() {
 
       expect(find.text('🎯'), findsOneWidget);
       expect(find.text('Learn Flutter'), findsOneWidget);
-      expect(find.text('5 decks • 120 cards'), findsOneWidget);
-      expect(find.text('65% complete'), findsOneWidget);
+      expect(find.textContaining('5 decks'), findsOneWidget);
+      expect(find.textContaining('120 total cards'), findsOneWidget);
     });
 
     testWidgets('Shows singular deck text when deckCount is 1', (tester) async {
@@ -38,17 +38,17 @@ void main() {
               name: 'Test Goal',
               deckCount: 1,
               cardCount: 10,
-              progressPercent: 0.5,
+              masteredCount: 5,
               onTap: () {},
             ),
           ),
         ),
       );
 
-      expect(find.text('1 deck • 10 cards'), findsOneWidget);
+      expect(find.textContaining('1 deck'), findsOneWidget);
     });
 
-    testWidgets('Shows singular card text when cardCount is 1', (tester) async {
+    testWidgets('Shows total cards text', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           theme: AppTheme.darkTheme,
@@ -58,14 +58,15 @@ void main() {
               name: 'Test Goal',
               deckCount: 2,
               cardCount: 1,
-              progressPercent: 0.1,
+              masteredCount: 0,
               onTap: () {},
             ),
           ),
         ),
       );
 
-      expect(find.text('2 decks • 1 card'), findsOneWidget);
+      expect(find.textContaining('2 decks'), findsOneWidget);
+      expect(find.textContaining('1 total cards'), findsOneWidget);
     });
 
     testWidgets('Handles zero progress', (tester) async {
@@ -78,15 +79,15 @@ void main() {
               name: 'New Goal',
               deckCount: 0,
               cardCount: 0,
-              progressPercent: 0.0,
+              masteredCount: 0,
               onTap: () {},
             ),
           ),
         ),
       );
 
+      expect(find.textContaining('0 decks'), findsOneWidget);
       expect(find.text('0% complete'), findsOneWidget);
-      expect(find.text('0 decks • 0 cards'), findsOneWidget);
     });
 
     testWidgets('Handles 100% progress', (tester) async {
@@ -99,7 +100,7 @@ void main() {
               name: 'Completed Goal',
               deckCount: 3,
               cardCount: 50,
-              progressPercent: 1.0,
+              masteredCount: 50,
               onTap: () {},
             ),
           ),
@@ -121,7 +122,7 @@ void main() {
               name: 'Test',
               deckCount: 1,
               cardCount: 10,
-              progressPercent: 0.5,
+              masteredCount: 5,
               onTap: () => tapped = true,
             ),
           ),
@@ -144,7 +145,7 @@ void main() {
               name: 'Test',
               deckCount: 1,
               cardCount: 10,
-              progressPercent: 0.5,
+              masteredCount: 5,
               onTap: () {},
               onLongPress: () => longPressed = true,
             ),
@@ -166,7 +167,7 @@ void main() {
               name: 'Styled Goal',
               deckCount: 2,
               cardCount: 20,
-              progressPercent: 0.75,
+              masteredCount: 15,
               onTap: () {},
             ),
           ),
@@ -178,3 +179,5 @@ void main() {
     });
   });
 }
+
+

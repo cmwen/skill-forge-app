@@ -79,6 +79,9 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
 
+  # SQLite FFI for testing on desktop platforms
+  sqflite_common_ffi: ^2.3.0
+
   # Flutter launcher icons - generates app icons for all platforms
   flutter_launcher_icons: ^0.13.1
 

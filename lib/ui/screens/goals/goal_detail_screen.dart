@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../providers/providers.dart';
+import '../../../services/services.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/widgets.dart';
 import '../deck/deck_detail_screen.dart';
 import '../deck/create_deck_screen.dart';
+import '../stats/goal_stats_screen.dart';
+import 'edit_goal_screen.dart';
 
 /// Screen showing details of a learning goal and its decks.
 class GoalDetailScreen extends StatefulWidget {
@@ -73,7 +76,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen> {
               title: const Text('Export Deck'),
               onTap: () {
                 Navigator.pop(context);
-                // TODO: Export deck
+                _showExportDeckOptions(deckId);
               },
             ),
             ListTile(
@@ -171,7 +174,11 @@ class _GoalDetailScreenState extends State<GoalDetailScreen> {
               title: const Text('Edit Goal'),
               onTap: () {
                 Navigator.pop(context);
-                // TODO: Navigate to edit goal screen
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => EditGoalScreen(goalId: widget.goalId),
+                  ),
+                );
               },
             ),
             ListTile(
@@ -179,7 +186,11 @@ class _GoalDetailScreenState extends State<GoalDetailScreen> {
               title: const Text('View Statistics'),
               onTap: () {
                 Navigator.pop(context);
-                // TODO: Show detailed stats
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => GoalStatsScreen(goalId: widget.goalId),
+                  ),
+                );
               },
             ),
             ListTile(
@@ -187,7 +198,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen> {
               title: const Text('Export All Decks'),
               onTap: () {
                 Navigator.pop(context);
-                // TODO: Export all decks
+                _exportGoal();
               },
             ),
             ListTile(
@@ -240,6 +251,110 @@ class _GoalDetailScreenState extends State<GoalDetailScreen> {
         ],
       ),
     );
+  }
+
+  void _showExportDeckOptions(String deckId) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(AppSpacing.m),
+              child: Text(
+                'Export Deck',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+            ),
+            const Divider(height: 1),
+            ListTile(
+              leading: const Icon(Icons.code),
+              title: const Text('JSON (Full backup)'),
+              subtitle: const Text('Complete data with progress'),
+              onTap: () {
+                Navigator.pop(context);
+                _exportDeck(deckId, ExportFormat.json);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.table_chart),
+              title: const Text('CSV (Anki/Quizlet compatible)'),
+              subtitle: const Text('Cards only'),
+              onTap: () {
+                Navigator.pop(context);
+                _exportDeck(deckId, ExportFormat.csv);
+              },
+            ),
+            const SizedBox(height: AppSpacing.m),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _exportDeck(String deckId, ExportFormat format) async {
+    try {
+      final exportService = context.read<ExportImportService>();
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(child: CircularProgressIndicator()),
+      );
+
+      await exportService.exportDeckAndShare(
+        deckId: deckId,
+        format: format,
+      );
+
+      if (mounted) {
+        Navigator.pop(context); // Close loading
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Export complete')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        Navigator.pop(context); // Close loading
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Export failed: $e'),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _exportGoal() async {
+    try {
+      final exportService = context.read<ExportImportService>();
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(child: CircularProgressIndicator()),
+      );
+
+      await exportService.exportGoalAndShare(widget.goalId);
+
+      if (mounted) {
+        Navigator.pop(context); // Close loading
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Export complete')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        Navigator.pop(context); // Close loading
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Export failed: $e'),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
+    }
   }
 
   @override

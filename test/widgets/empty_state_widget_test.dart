@@ -13,8 +13,8 @@ void main() {
             body: EmptyStateWidget(
               icon: Icons.folder_open,
               title: 'No Items',
-              message: 'Add your first item',
-              actionLabel: 'Add Item',
+              description: 'Add your first item',
+              actionText: 'Add Item',
               onAction: () {},
             ),
           ),
@@ -32,14 +32,14 @@ void main() {
         MaterialApp(
           theme: AppTheme.darkTheme,
           home: Scaffold(
-            body: EmptyStateWidget.noGoals(onAction: () {}),
+            body: EmptyStates.noGoals(onCreate: () {}),
           ),
         ),
       );
 
-      expect(find.text('No Learning Goals Yet'), findsOneWidget);
-      expect(find.text('Create your first goal to start organizing your learning journey.'), findsOneWidget);
-      expect(find.text('Create Goal'), findsOneWidget);
+      expect(find.text('Welcome to Skill Forge!'), findsOneWidget);
+      expect(find.textContaining('Create your first learning goal'), findsOneWidget);
+      expect(find.text('Create Your First Goal'), findsOneWidget);
     });
 
     testWidgets('Uses noDecks preset correctly', (tester) async {
@@ -47,14 +47,15 @@ void main() {
         MaterialApp(
           theme: AppTheme.darkTheme,
           home: Scaffold(
-            body: EmptyStateWidget.noDecks(onAction: () {}),
+            body: EmptyStates.noDecks(onGenerate: () {}, onCreate: () {}),
           ),
         ),
       );
 
-      expect(find.text('No Decks Yet'), findsOneWidget);
-      expect(find.text('Create a deck to organize your flashcards.'), findsOneWidget);
-      expect(find.text('Create Deck'), findsOneWidget);
+      expect(find.text('Goal Created!'), findsOneWidget);
+      expect(find.textContaining('no content yet'), findsOneWidget);
+      expect(find.text('Generate Content'), findsOneWidget);
+      expect(find.text('Create Empty Deck'), findsOneWidget);
     });
 
     testWidgets('Uses noCards preset correctly', (tester) async {
@@ -62,17 +63,13 @@ void main() {
         MaterialApp(
           theme: AppTheme.darkTheme,
           home: Scaffold(
-            body: EmptyStateWidget.noCards(
-              onAddManually: () {},
-              onGenerate: () {},
-            ),
+            body: EmptyStates.noCards(onAdd: () {}),
           ),
         ),
       );
 
       expect(find.text('No Cards Yet'), findsOneWidget);
-      expect(find.text('Add Card'), findsOneWidget);
-      expect(find.text('Generate with AI'), findsOneWidget);
+      expect(find.text('Add Cards'), findsOneWidget);
     });
 
     testWidgets('Triggers action callback when button pressed', (tester) async {
@@ -82,14 +79,14 @@ void main() {
         MaterialApp(
           theme: AppTheme.darkTheme,
           home: Scaffold(
-            body: EmptyStateWidget.noGoals(
-              onAction: () => actionTriggered = true,
+            body: EmptyStates.noGoals(
+              onCreate: () => actionTriggered = true,
             ),
           ),
         ),
       );
 
-      await tester.tap(find.text('Create Goal'));
+      await tester.tap(find.text('Create Your First Goal'));
       expect(actionTriggered, true);
     });
 
@@ -101,36 +98,66 @@ void main() {
             body: EmptyStateWidget(
               icon: Icons.info,
               title: 'Empty',
-              message: 'No action',
+              description: 'No action',
             ),
           ),
         ),
       );
 
-      expect(find.byType(FilledButton), findsNothing);
+      expect(find.byType(ElevatedButton), findsNothing);
     });
 
-    testWidgets('Shows two buttons for noCards preset', (tester) async {
-      bool addManuallyPressed = false;
+    testWidgets('Shows two buttons for noDecks preset', (tester) async {
       bool generatePressed = false;
+      bool createPressed = false;
 
       await tester.pumpWidget(
         MaterialApp(
           theme: AppTheme.darkTheme,
           home: Scaffold(
-            body: EmptyStateWidget.noCards(
-              onAddManually: () => addManuallyPressed = true,
+            body: EmptyStates.noDecks(
               onGenerate: () => generatePressed = true,
+              onCreate: () => createPressed = true,
             ),
           ),
         ),
       );
 
-      await tester.tap(find.text('Add Card'));
-      expect(addManuallyPressed, true);
-
-      await tester.tap(find.text('Generate with AI'));
+      await tester.tap(find.text('Generate Content'));
       expect(generatePressed, true);
+
+      await tester.tap(find.text('Create Empty Deck'));
+      expect(createPressed, true);
+    });
+
+    testWidgets('Uses allCaughtUp preset correctly', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.darkTheme,
+          home: Scaffold(
+            body: EmptyStates.allCaughtUp(onPractice: () {}),
+          ),
+        ),
+      );
+
+      expect(find.text('All Caught Up!'), findsOneWidget);
+      expect(find.textContaining('No cards due'), findsOneWidget);
+      expect(find.text('Practice More'), findsOneWidget);
+    });
+
+    testWidgets('Uses noSearchResults preset correctly', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.darkTheme,
+          home: Scaffold(
+            body: EmptyStates.noSearchResults(onClear: () {}),
+          ),
+        ),
+      );
+
+      expect(find.text('No results found'), findsOneWidget);
+      expect(find.text('Clear Search'), findsOneWidget);
     });
   });
 }
+

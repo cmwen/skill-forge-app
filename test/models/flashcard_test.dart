@@ -16,7 +16,7 @@ void main() {
       expect(card.front, 'Question?');
       expect(card.back, 'Answer!');
       expect(card.masteryLevel, 0);
-      expect(card.intervalDays, 0);
+      expect(card.intervalDays, 1.0); // Default is 1.0 for new cards
       expect(card.easeFactor, 2.5);
       expect(card.reviewCount, 0);
       expect(card.correctCount, 0);
@@ -48,7 +48,7 @@ void main() {
         back: 'A',
       );
 
-      final updated = card.recordReview(2); // Easy
+      final updated = card.recordReview(quality: 2); // Easy
 
       expect(updated.reviewCount, 1);
       expect(updated.correctCount, 1);
@@ -64,7 +64,7 @@ void main() {
         back: 'A',
       ).copyWith(easeFactor: 2.5);
 
-      final updated = card.recordReview(0); // Hard
+      final updated = card.recordReview(quality: 0); // Hard
 
       expect(updated.easeFactor, lessThan(2.5));
       expect(updated.easeFactor, greaterThanOrEqualTo(1.3));
@@ -77,13 +77,13 @@ void main() {
         back: 'A',
       );
 
-      card = card.recordReview(1); // Medium
+      card = card.recordReview(quality: 1); // Medium
       final firstInterval = card.intervalDays;
 
-      card = card.recordReview(1); // Medium
+      card = card.recordReview(quality: 1); // Medium
       final secondInterval = card.intervalDays;
 
-      card = card.recordReview(1); // Medium
+      card = card.recordReview(quality: 1); // Medium
       final thirdInterval = card.intervalDays;
 
       expect(secondInterval, greaterThan(firstInterval));
@@ -99,7 +99,7 @@ void main() {
 
       // Do 20 perfect reviews
       for (int i = 0; i < 20; i++) {
-        card = card.recordReview(2); // Easy
+        card = card.recordReview(quality: 2); // Easy
       }
 
       expect(card.masteryLevel, 100);

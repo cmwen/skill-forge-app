@@ -2,17 +2,28 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:skill_forge/services/export_import_service.dart';
 import 'package:skill_forge/database/database_helper.dart';
 import 'package:skill_forge/models/models.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'dart:convert';
 
 void main() {
+  // Initialize FFI for testing
+  setUpAll(() {
+    sqfliteFfiInit();
+    databaseFactory = databaseFactoryFfi;
+  });
+
   group('ExportImportService Tests', () {
     late DatabaseHelper dbHelper;
     late ExportImportService exportService;
 
     setUp(() async {
       TestWidgetsFlutterBinding.ensureInitialized();
-      dbHelper = DatabaseHelper();
-      await dbHelper.database;
+      // Use in-memory database with unique name for isolation
+      dbHelper = DatabaseHelper(
+        databaseName: 'test_${DateTime.now().microsecondsSinceEpoch}.db',
+        inMemory: true,
+      );
+      await dbHelper.initialize();
       exportService = ExportImportService(dbHelper);
     });
 
@@ -34,17 +45,15 @@ void main() {
 
     test('Export database with data as JSON', () async {
       // Create test data
-      final goal = await dbHelper.insertGoal(
-        LearningGoal.create(name: 'Test Goal', icon: '📚'),
-      );
+      final goal = LearningGoal.create(name: 'Test Goal', icon: '📚');
+      await dbHelper.insertGoal(goal);
 
-      final deck = await dbHelper.insertDeck(
-        Deck.create(
+      final deck = Deck.create(
           goalId: goal.id,
           name: 'Test Deck',
           source: 'Manual',
-        ),
-      );
+        );
+      await dbHelper.insertDeck(deck);
 
       await dbHelper.insertFlashcard(
         Flashcard.create(
@@ -66,17 +75,15 @@ void main() {
     });
 
     test('Export as CSV includes all cards', () async {
-      final goal = await dbHelper.insertGoal(
-        LearningGoal.create(name: 'Spanish', icon: '🇪🇸'),
-      );
+      final goal = LearningGoal.create(name: 'Spanish', icon: '🇪🇸');
+      await dbHelper.insertGoal(goal);
 
-      final deck = await dbHelper.insertDeck(
-        Deck.create(
+      final deck = Deck.create(
           goalId: goal.id,
           name: 'Verbs',
           source: 'Manual',
-        ),
-      );
+        );
+      await dbHelper.insertDeck(deck);
 
       await dbHelper.insertFlashcard(
         Flashcard.create(
@@ -106,17 +113,15 @@ void main() {
     });
 
     test('CSV escapes commas in content', () async {
-      final goal = await dbHelper.insertGoal(
-        LearningGoal.create(name: 'Test', icon: '📚'),
-      );
+      final goal = LearningGoal.create(name: 'Test', icon: '📚');
+      await dbHelper.insertGoal(goal);
 
-      final deck = await dbHelper.insertDeck(
-        Deck.create(
+      final deck = Deck.create(
           goalId: goal.id,
           name: 'Deck, with, commas',
           source: 'Manual',
-        ),
-      );
+        );
+      await dbHelper.insertDeck(deck);
 
       await dbHelper.insertFlashcard(
         Flashcard.create(

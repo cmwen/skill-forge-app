@@ -30,6 +30,9 @@ class StudyProvider extends ChangeNotifier {
   /// Recent study sessions
   List<StudySession> _recentSessions = [];
 
+  /// Sessions for a specific goal
+  List<StudySession> _goalSessions = [];
+
   /// Overall statistics
   Map<String, dynamic> _overallStats = {};
 
@@ -68,6 +71,9 @@ class StudyProvider extends ChangeNotifier {
 
   /// Recent study sessions
   List<StudySession> get recentSessions => List.unmodifiable(_recentSessions);
+
+  /// Sessions for a specific goal
+  List<StudySession> get goalSessions => List.unmodifiable(_goalSessions);
 
   /// Overall statistics
   Map<String, dynamic> get overallStats => Map.unmodifiable(_overallStats);
@@ -173,6 +179,12 @@ class StudyProvider extends ChangeNotifier {
   /// Get total study time for a goal
   Future<int> getTotalStudyTimeForGoal(String goalId) async {
     return await _db.getTotalStudyTimeForGoal(goalId);
+  }
+
+  /// Load statistics for a specific goal
+  Future<void> loadStatsForGoal(String goalId) async {
+    _goalSessions = await _db.getStudySessionsForGoal(goalId);
+    notifyListeners();
   }
 
   /// Format seconds as a human-readable duration string

@@ -21,10 +21,26 @@ import '../models/models.dart';
 /// final goals = await db.getAllGoals();
 /// ```
 class DatabaseHelper {
-  static const String _databaseName = 'skill_forge.db';
+  static const String _defaultDatabaseName = 'skill_forge.db';
   static const int _databaseVersion = 2;
 
+  /// Custom database name for testing
+  final String _databaseName;
+  
+  /// Whether to use in-memory database (for testing)
+  final bool _inMemory;
+
   Database? _database;
+
+  /// Creates a DatabaseHelper instance
+  /// 
+  /// [databaseName] - Custom database name (for testing)
+  /// [inMemory] - Use in-memory database (for testing)
+  DatabaseHelper({
+    String? databaseName,
+    bool inMemory = false,
+  })  : _databaseName = databaseName ?? _defaultDatabaseName,
+        _inMemory = inMemory;
 
   /// Whether the database is initialized
   bool get isInitialized => _database != null;
@@ -33,8 +49,13 @@ class DatabaseHelper {
   Future<void> initialize() async {
     if (_database != null) return;
 
-    final dbPath = await getDatabasesPath();
-    final path = join(dbPath, _databaseName);
+    final String path;
+    if (_inMemory) {
+      path = inMemoryDatabasePath;
+    } else {
+      final dbPath = await getDatabasesPath();
+      path = join(dbPath, _databaseName);
+    }
 
     try {
       _database = await openDatabase(
@@ -49,7 +70,9 @@ class DatabaseHelper {
     } catch (e) {
       // If database is corrupted, delete and recreate
       try {
-        await deleteDatabase(path);
+        if (!_inMemory) {
+          await deleteDatabase(path);
+        }
         _database = await openDatabase(
           path,
           version: _databaseVersion,

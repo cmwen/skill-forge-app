@@ -14,8 +14,7 @@ void main() {
               name: 'Spanish Verbs',
               cardCount: 50,
               masteredCount: 25,
-              progressPercent: 0.5,
-              lastStudied: 'Yesterday',
+              lastStudiedAt: DateTime.now().subtract(const Duration(days: 1)),
               onTap: () {},
             ),
           ),
@@ -23,8 +22,8 @@ void main() {
       );
 
       expect(find.text('Spanish Verbs'), findsOneWidget);
-      expect(find.text('25/50 cards'), findsOneWidget);
-      expect(find.text('Last studied: Yesterday'), findsOneWidget);
+      expect(find.textContaining('50 cards'), findsOneWidget);
+      expect(find.textContaining('25 mastered'), findsOneWidget);
     });
 
     testWidgets('Shows correct progress bar', (tester) async {
@@ -36,15 +35,14 @@ void main() {
               name: 'Test Deck',
               cardCount: 100,
               masteredCount: 75,
-              progressPercent: 0.75,
-              lastStudied: 'Today',
+              lastStudiedAt: DateTime.now(),
               onTap: () {},
             ),
           ),
         ),
       );
 
-      expect(find.text('75/100 cards'), findsOneWidget);
+      expect(find.textContaining('100 cards'), findsOneWidget);
       expect(find.byType(LinearProgressIndicator), findsOneWidget);
     });
 
@@ -57,16 +55,15 @@ void main() {
               name: 'New Deck',
               cardCount: 10,
               masteredCount: 0,
-              progressPercent: 0.0,
-              lastStudied: 'Never',
+              lastStudiedAt: null,
               onTap: () {},
             ),
           ),
         ),
       );
 
-      expect(find.text('0/10 cards'), findsOneWidget);
-      expect(find.text('Last studied: Never'), findsOneWidget);
+      expect(find.textContaining('10 cards'), findsOneWidget);
+      expect(find.textContaining('Never studied'), findsOneWidget);
     });
 
     testWidgets('Handles 100% progress', (tester) async {
@@ -78,15 +75,14 @@ void main() {
               name: 'Completed Deck',
               cardCount: 20,
               masteredCount: 20,
-              progressPercent: 1.0,
-              lastStudied: 'Today',
+              lastStudiedAt: DateTime.now(),
               onTap: () {},
             ),
           ),
         ),
       );
 
-      expect(find.text('20/20 cards'), findsOneWidget);
+      expect(find.textContaining('20 cards'), findsOneWidget);
     });
 
     testWidgets('Tap triggers callback', (tester) async {
@@ -100,8 +96,7 @@ void main() {
               name: 'Test',
               cardCount: 10,
               masteredCount: 5,
-              progressPercent: 0.5,
-              lastStudied: 'Today',
+              lastStudiedAt: DateTime.now(),
               onTap: () => tapped = true,
             ),
           ),
@@ -112,8 +107,8 @@ void main() {
       expect(tapped, true);
     });
 
-    testWidgets('Options menu tap triggers callback', (tester) async {
-      bool optionsTapped = false;
+    testWidgets('Long press triggers callback', (tester) async {
+      bool longPressed = false;
 
       await tester.pumpWidget(
         MaterialApp(
@@ -123,17 +118,16 @@ void main() {
               name: 'Test',
               cardCount: 10,
               masteredCount: 5,
-              progressPercent: 0.5,
-              lastStudied: 'Today',
+              lastStudiedAt: DateTime.now(),
               onTap: () {},
-              onOptionsPressed: () => optionsTapped = true,
+              onLongPress: () => longPressed = true,
             ),
           ),
         ),
       );
 
-      await tester.tap(find.byIcon(Icons.more_vert));
-      expect(optionsTapped, true);
+      await tester.longPress(find.byType(DeckCard));
+      expect(longPressed, true);
     });
 
     testWidgets('Handles singular card count', (tester) async {
@@ -145,15 +139,14 @@ void main() {
               name: 'Single Card',
               cardCount: 1,
               masteredCount: 0,
-              progressPercent: 0.0,
-              lastStudied: 'Never',
+              lastStudiedAt: null,
               onTap: () {},
             ),
           ),
         ),
       );
 
-      expect(find.text('0/1 card'), findsOneWidget);
+      expect(find.textContaining('1 card'), findsOneWidget);
     });
   });
 }

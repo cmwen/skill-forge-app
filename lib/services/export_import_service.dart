@@ -119,6 +119,126 @@ class ExportImportService {
     return '${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}_${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}';
   }
 
+  /// Export a single deck as JSON
+  Future<String> exportDeckAsJson(String deckId) async {
+    final deck = await _db.getDeck(deckId);
+    if (deck == null) throw Exception('Deck not found');
+
+    final cards = await _db.getFlashcardsForDeck(deckId);
+
+    final exportData = {
+      'version': '1.0',
+      'type': 'deck_export',
+      'exported_at': DateTime.now().toIso8601String(),
+      'deck': deck.toMap(),
+      'flashcards': cards.map((c) => c.toMap()).toList(),
+    };
+
+    return JsonEncoder.withIndent('  ').convert(exportData);
+  }
+
+  /// Export a single deck as CSV
+  Future<String> exportDeckAsCsv(String deckId) async {
+    final deck = await _db.getDeck(deckId);
+    if (deck == null) throw Exception('Deck not found');
+
+    final cards = await _db.getFlashcardsForDeck(deckId);
+    final csvLines = <String>['Front,Back,Notes'];
+
+    for (final card in cards) {
+      final front = _escapeCsv(card.front);
+      final back = _escapeCsv(card.back);
+      final notes = _escapeCsv(card.notes ?? '');
+      csvLines.add('$front,$back,$notes');
+    }
+
+    return csvLines.join('\n');
+  }
+
+  /// Export a single deck and share
+  Future<void> exportDeckAndShare({
+    required String deckId,
+    required ExportFormat format,
+  }) async {
+    final deck = await _db.getDeck(deckId);
+    if (deck == null) throw Exception('Deck not found');
+
+    final String content;
+    final String filename;
+
+    final safeDeckName = deck.name.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '_');
+
+    switch (format) {
+      case ExportFormat.json:
+        content = await exportDeckAsJson(deckId);
+        filename = '${safeDeckName}_${_getTimestamp()}.json';
+        break;
+      case ExportFormat.csv:
+        content = await exportDeckAsCsv(deckId);
+        filename = '${safeDeckName}_${_getTimestamp()}.csv';
+        break;
+    }
+
+    // Save to temporary file
+    final tempDir = await getTemporaryDirectory();
+    final file = File('${tempDir.path}/$filename');
+    await file.writeAsString(content);
+
+    // Share the file
+    await Share.shareXFiles(
+      [XFile(file.path)],
+      subject: 'Skill Forge - ${deck.name}',
+    );
+  }
+
+  /// Export a single goal with all its decks and cards
+  Future<String> exportGoalAsJson(String goalId) async {
+    final goal = await _db.getGoal(goalId);
+    if (goal == null) throw Exception('Goal not found');
+
+    final decks = await _db.getDecksForGoal(goalId);
+    final allCards = <Flashcard>[];
+    final sessions = await _db.getStudySessionsForGoal(goalId);
+
+    for (final deck in decks) {
+      final cards = await _db.getFlashcardsForDeck(deck.id);
+      allCards.addAll(cards);
+    }
+
+    final exportData = {
+      'version': '1.0',
+      'type': 'goal_export',
+      'exported_at': DateTime.now().toIso8601String(),
+      'goal': goal.toMap(),
+      'decks': decks.map((d) => d.toMap()).toList(),
+      'flashcards': allCards.map((c) => c.toMap()).toList(),
+      'study_sessions': sessions.map((s) => s.toMap()).toList(),
+    };
+
+    return JsonEncoder.withIndent('  ').convert(exportData);
+  }
+
+  /// Export a single goal and share
+  Future<void> exportGoalAndShare(String goalId) async {
+    final goal = await _db.getGoal(goalId);
+    if (goal == null) throw Exception('Goal not found');
+
+    final content = await exportGoalAsJson(goalId);
+    final safeGoalName = goal.name.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '_');
+    final filename = '${safeGoalName}_${_getTimestamp()}.json';
+
+    // Save to temporary file
+    final tempDir = await getTemporaryDirectory();
+    final file = File('${tempDir.path}/$filename');
+    await file.writeAsString(content);
+
+    // Share the file
+    await Share.shareXFiles(
+      [XFile(file.path)],
+      subject: 'Skill Forge - ${goal.name}',
+    );
+  }
+
   // ============================================================
   // Import
   // ============================================================

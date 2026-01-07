@@ -5,6 +5,9 @@ import 'package:file_picker/file_picker.dart';
 import '../../../services/services.dart';
 import '../../../ollama_toolkit/ollama_toolkit.dart';
 import '../../theme/app_theme.dart';
+import '../goals/goals_screen.dart';
+import 'user_guide_screen.dart';
+import 'privacy_policy_screen.dart';
 
 /// The More screen with settings and data management.
 class MoreScreen extends StatefulWidget {
@@ -31,7 +34,12 @@ class _MoreScreenState extends State<MoreScreen> {
             title: 'Manage Goals',
             subtitle: 'Create, edit, or archive goals',
             onTap: () {
-              // TODO: Navigate to goals management
+              // Navigate to Goals tab
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const GoalsScreen(),
+                ),
+              );
             },
           ),
 
@@ -85,14 +93,22 @@ class _MoreScreenState extends State<MoreScreen> {
             icon: Icons.help_outline,
             title: 'User Guide',
             onTap: () {
-              // TODO: Show user guide
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const UserGuideScreen(),
+                ),
+              );
             },
           ),
           _SettingsTile(
             icon: Icons.privacy_tip_outlined,
             title: 'Privacy Policy',
             onTap: () {
-              // TODO: Show privacy policy
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const PrivacyPolicyScreen(),
+                ),
+              );
             },
           ),
           _SettingsTile(

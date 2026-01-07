@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../providers/providers.dart';
+import '../../../services/services.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/widgets.dart';
 import '../study/flashcard_study_screen.dart';
 import '../study/quiz_screen.dart';
 import 'add_card_screen.dart';
+import 'card_list_screen.dart';
 
 /// Screen showing deck details and practice options.
 class DeckDetailScreen extends StatefulWidget {
@@ -69,7 +71,14 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
   }
 
   void _viewAllCards() {
-    // TODO: Navigate to card list screen
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => CardListScreen(
+          deckId: widget.deckId,
+          goalId: widget.goalId,
+        ),
+      ),
+    );
   }
 
   void _showDeckMenu() {
@@ -96,7 +105,10 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
               title: const Text('Generate More Content'),
               onTap: () {
                 Navigator.pop(context);
-                // TODO: Navigate to generate with deck pre-selected
+                // Navigate to Generate screen with goal pre-selected
+                context.read<NavigationProvider>().navigateToGenerate();
+                // Pop back to main shell so we're at the Generate tab
+                Navigator.of(context).popUntil((route) => route.isFirst);
               },
             ),
             ListTile(
@@ -104,7 +116,7 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
               title: const Text('Export Deck'),
               onTap: () {
                 Navigator.pop(context);
-                // TODO: Export deck
+                _showExportDeckOptions();
               },
             ),
             ListTile(
@@ -150,6 +162,80 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
         ],
       ),
     );
+  }
+
+  void _showExportDeckOptions() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(AppSpacing.m),
+              child: Text(
+                'Export Deck',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+            ),
+            const Divider(height: 1),
+            ListTile(
+              leading: const Icon(Icons.code),
+              title: const Text('JSON (Full backup)'),
+              subtitle: const Text('Complete data with progress'),
+              onTap: () {
+                Navigator.pop(context);
+                _exportDeck(ExportFormat.json);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.table_chart),
+              title: const Text('CSV (Anki/Quizlet compatible)'),
+              subtitle: const Text('Cards only'),
+              onTap: () {
+                Navigator.pop(context);
+                _exportDeck(ExportFormat.csv);
+              },
+            ),
+            const SizedBox(height: AppSpacing.m),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _exportDeck(ExportFormat format) async {
+    try {
+      final exportService = context.read<ExportImportService>();
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(child: CircularProgressIndicator()),
+      );
+
+      await exportService.exportDeckAndShare(
+        deckId: widget.deckId,
+        format: format,
+      );
+
+      if (mounted) {
+        Navigator.pop(context); // Close loading
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Export complete')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        Navigator.pop(context); // Close loading
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Export failed: $e'),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
+    }
   }
 
   @override

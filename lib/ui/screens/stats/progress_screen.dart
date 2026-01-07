@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../providers/providers.dart';
+import '../../../services/services.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/widgets.dart';
+import 'goal_stats_screen.dart';
 
 /// Screen showing learning progress across all goals.
 class ProgressScreen extends StatefulWidget {
@@ -41,7 +43,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
           IconButton(
             icon: const Icon(Icons.file_download_outlined),
             onPressed: () {
-              // TODO: Export data
+              _showExportOptions(context);
             },
             tooltip: 'Export',
           ),
@@ -133,7 +135,11 @@ class _ProgressScreenState extends State<ProgressScreen> {
                         cardsProgress: '$masteredCount/$cardCount cards',
                         studyTime: StudyProvider.formatDuration(studyTime),
                         onTap: () {
-                          // TODO: Navigate to detailed goal stats
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => GoalStatsScreen(goalId: goal.id),
+                            ),
+                          );
                         },
                       ),
                     );
@@ -218,6 +224,77 @@ class _ProgressScreenState extends State<ProgressScreen> {
       return 'Yesterday';
     } else {
       return '${diff.inDays}d ago';
+    }
+  }
+
+  void _showExportOptions(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(AppSpacing.m),
+              child: Text(
+                'Export Data',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+            ),
+            const Divider(height: 1),
+            ListTile(
+              leading: const Icon(Icons.code),
+              title: const Text('JSON (Full backup)'),
+              subtitle: const Text('Complete data with progress'),
+              onTap: () {
+                Navigator.pop(context);
+                _exportData(context, ExportFormat.json);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.table_chart),
+              title: const Text('CSV (Anki/Quizlet compatible)'),
+              subtitle: const Text('Cards only'),
+              onTap: () {
+                Navigator.pop(context);
+                _exportData(context, ExportFormat.csv);
+              },
+            ),
+            const SizedBox(height: AppSpacing.m),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _exportData(BuildContext context, ExportFormat format) async {
+    try {
+      final exportService = context.read<ExportImportService>();
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(child: CircularProgressIndicator()),
+      );
+
+      await exportService.exportAndShare(format: format);
+
+      if (context.mounted) {
+        Navigator.pop(context); // Close loading
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Export complete')),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        Navigator.pop(context); // Close loading
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Export failed: $e'),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
     }
   }
 }

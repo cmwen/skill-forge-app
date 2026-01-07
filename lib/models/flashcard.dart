@@ -96,6 +96,12 @@ class Flashcard {
     return DateTime.now().isAfter(nextReviewAt!);
   }
 
+  /// Accuracy percentage based on correct answers
+  double get accuracy {
+    if (reviewCount == 0) return 0.0;
+    return (correctCount / reviewCount) * 100;
+  }
+
   /// Creates a copy with updated fields after a review
   ///
   /// [quality] is the user's rating: 0 = Hard, 1 = Medium, 2 = Easy

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../providers/goals_provider.dart';
+import '../../../services/services.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/widgets.dart';
 import '../goals/create_goal_screen.dart';
 import '../goals/goal_detail_screen.dart';
+import '../goals/edit_goal_screen.dart';
+import '../goals/search_screen.dart';
 
 /// The main Goals screen (home screen).
 ///
@@ -61,7 +64,11 @@ class _GoalsScreenState extends State<GoalsScreen> {
               title: const Text('Edit Goal'),
               onTap: () {
                 Navigator.pop(context);
-                // TODO: Navigate to edit goal screen
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => EditGoalScreen(goalId: goalId),
+                  ),
+                );
               },
             ),
             ListTile(
@@ -85,7 +92,7 @@ class _GoalsScreenState extends State<GoalsScreen> {
               title: const Text('Export Goal'),
               onTap: () {
                 Navigator.pop(context);
-                // TODO: Export goal
+                _exportGoal(goalId);
               },
             ),
             ListTile(
@@ -131,6 +138,36 @@ class _GoalsScreenState extends State<GoalsScreen> {
     );
   }
 
+  Future<void> _exportGoal(String goalId) async {
+    try {
+      final exportService = context.read<ExportImportService>();
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(child: CircularProgressIndicator()),
+      );
+
+      await exportService.exportGoalAndShare(goalId);
+
+      if (mounted) {
+        Navigator.pop(context); // Close loading
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Export complete')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        Navigator.pop(context); // Close loading
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Export failed: $e'),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -140,7 +177,11 @@ class _GoalsScreenState extends State<GoalsScreen> {
           IconButton(
             icon: const Icon(Icons.search),
             onPressed: () {
-              // TODO: Implement search
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const SearchScreen(),
+                ),
+              );
             },
           ),
         ],

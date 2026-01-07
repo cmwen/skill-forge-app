@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../providers/goals_provider.dart';
+import '../../../providers/navigation_provider.dart';
 import '../../theme/app_theme.dart';
 
 /// Screen for creating a new learning goal.
@@ -138,7 +139,8 @@ class _CreateGoalScreenState extends State<CreateGoalScreen> {
             onPressed: () {
               Navigator.pop(context); // Close dialog
               Navigator.pop(context); // Go back
-              // TODO: Navigate to generate screen with goal pre-selected
+              // Navigate to Generate screen with goal pre-selected
+              context.read<NavigationProvider>().navigateToGenerate();
             },
             icon: const Icon(Icons.auto_awesome),
             label: const Text('Generate Content'),
