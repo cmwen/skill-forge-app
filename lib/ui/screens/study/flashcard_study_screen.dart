@@ -77,15 +77,17 @@ class _FlashcardStudyScreenState extends State<FlashcardStudyScreen> {
 
   Future<void> _rateCard(int quality) async {
     if (_currentIndex >= _cards.length) return;
-
     final card = _cards[_currentIndex];
     final wasCorrect = quality >= 1;
 
     // Record in provider
-    await context.read<FlashcardsProvider>().recordReview(card.id, quality);
+    final flashcardsProvider = context.read<FlashcardsProvider>();
+    final studyProvider = context.read<StudyProvider>();
+    
+    await flashcardsProvider.recordReview(card.id, quality);
 
     // Track in study session
-    context.read<StudyProvider>().recordCardReview(wasCorrect: wasCorrect);
+    studyProvider.recordCardReview(wasCorrect: wasCorrect);
 
     if (wasCorrect) {
       _correctCount++;

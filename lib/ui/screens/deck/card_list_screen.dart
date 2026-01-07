@@ -185,6 +185,7 @@ class _CardListScreenState extends State<CardListScreen> {
           ),
           FilledButton(
             onPressed: () async {
+              final nav = Navigator.of(context);
               final resetCard = card.copyWith(
                 reviewCount: 0,
                 correctCount: 0,
@@ -192,8 +193,8 @@ class _CardListScreenState extends State<CardListScreen> {
                 intervalDays: 1.0,
                 nextReviewAt: DateTime.now(),
               );
+              nav.pop();
               await context.read<FlashcardsProvider>().updateFlashcard(resetCard);
-              if (context.mounted) Navigator.pop(context);
             },
             child: const Text('Reset'),
           ),
@@ -217,10 +218,14 @@ class _CardListScreenState extends State<CardListScreen> {
           ),
           FilledButton(
             onPressed: () async {
-              Navigator.pop(context);
-              await context.read<FlashcardsProvider>().deleteFlashcard(card.id);
-              await context.read<DecksProvider>().refreshDeckStats(widget.deckId);
-              await context.read<GoalsProvider>().refreshGoalStats(widget.goalId);
+              final nav = Navigator.of(context);
+              final flashcardsProvider = context.read<FlashcardsProvider>();
+              final decksProvider = context.read<DecksProvider>();
+              final goalsProvider = context.read<GoalsProvider>();
+              nav.pop();
+              await flashcardsProvider.deleteFlashcard(card.id);
+              await decksProvider.refreshDeckStats(widget.deckId);
+              await goalsProvider.refreshGoalStats(widget.goalId);
             },
             style: FilledButton.styleFrom(backgroundColor: AppColors.error),
             child: const Text('Delete'),
@@ -380,15 +385,21 @@ class _CardListScreenState extends State<CardListScreen> {
                 ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          final result = await Navigator.of(context).push(
+          final nav = Navigator.of(context);
+          final decksProvider = context.read<DecksProvider>();
+          final goalsProvider = context.read<GoalsProvider>();
+          
+          final result = await nav.push(
             MaterialPageRoute(
               builder: (context) => AddCardScreen(deckId: widget.deckId),
             ),
           );
-          if (result == true) {
+          if (result == true && mounted) {
             await flashcardsProvider.loadFlashcardsForDeck(widget.deckId);
-            await context.read<DecksProvider>().refreshDeckStats(widget.deckId);
-            await context.read<GoalsProvider>().refreshGoalStats(widget.goalId);
+            if (mounted) {
+              await decksProvider.refreshDeckStats(widget.deckId);
+              await goalsProvider.refreshGoalStats(widget.goalId);
+            }
           }
         },
         child: const Icon(Icons.add),

@@ -57,16 +57,21 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
   }
 
   void _navigateToAddCard() async {
-    final result = await Navigator.of(context).push(
+    final nav = Navigator.of(context);
+    final flashcardsProvider = context.read<FlashcardsProvider>();
+    final decksProvider = context.read<DecksProvider>();
+    final goalsProvider = context.read<GoalsProvider>();
+    
+    final result = await nav.push(
       MaterialPageRoute(
         builder: (context) => AddCardScreen(deckId: widget.deckId),
       ),
     );
-    if (result == true) {
+    if (result == true && mounted) {
       // Card was added, refresh the list
-      context.read<FlashcardsProvider>().loadFlashcardsForDeck(widget.deckId);
-      context.read<DecksProvider>().refreshDeckStats(widget.deckId);
-      context.read<GoalsProvider>().refreshGoalStats(widget.goalId);
+      flashcardsProvider.loadFlashcardsForDeck(widget.deckId);
+      decksProvider.refreshDeckStats(widget.deckId);
+      goalsProvider.refreshGoalStats(widget.goalId);
     }
   }
 
@@ -149,12 +154,13 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
           ),
           FilledButton(
             onPressed: () async {
-              Navigator.pop(context);
-              await context.read<DecksProvider>().deleteDeck(widget.deckId);
-              await context
-                  .read<GoalsProvider>()
-                  .refreshGoalStats(widget.goalId);
-              if (mounted) Navigator.pop(context);
+              final nav = Navigator.of(context);
+              final decksProvider = context.read<DecksProvider>();
+              final goalsProvider = context.read<GoalsProvider>();
+              nav.pop();
+              await decksProvider.deleteDeck(widget.deckId);
+              await goalsProvider.refreshGoalStats(widget.goalId);
+              if (mounted) nav.pop();
             },
             style: FilledButton.styleFrom(backgroundColor: AppColors.error),
             child: const Text('Delete'),

@@ -147,6 +147,7 @@ Use simple, clear language appropriate for $_difficulty level learners.''';
       _generationProgress = '';
     });
 
+    final messenger = ScaffoldMessenger.of(context);
     try {
       final goalsProvider = context.read<GoalsProvider>();
       final goal = goalsProvider.getGoalById(_selectedGoalId!);
@@ -175,7 +176,7 @@ Use simple, clear language appropriate for $_difficulty level learners.''';
       });
 
       if (cards.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
+        messenger.showSnackBar(
           const SnackBar(
             content: Text('No flashcards were generated. Please try again.'),
             backgroundColor: AppColors.warning,
@@ -186,7 +187,7 @@ Use simple, clear language appropriate for $_difficulty level learners.''';
       setState(() {
         _isGenerating = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
+      messenger.showSnackBar(
         SnackBar(
           content: Text('Failed to generate content: $e'),
           backgroundColor: AppColors.error,
@@ -279,14 +280,17 @@ Use simple, clear language appropriate for $_difficulty level learners.''';
 
     try {
       // Create deck
-      final deck = await context.read<DecksProvider>().createDeck(
+      final decksProvider = context.read<DecksProvider>();
+      final goalsProvider = context.read<GoalsProvider>();
+      final flashcardsProvider = context.read<FlashcardsProvider>();
+      
+      final deck = await decksProvider.createDeck(
             goalId: _selectedGoalId!,
             name: _deckNameController.text.trim(),
             source: 'AI Generated',
           );
 
       // Load flashcards provider for this deck
-      final flashcardsProvider = context.read<FlashcardsProvider>();
       await flashcardsProvider.loadFlashcardsForDeck(deck.id);
 
       // Add all cards
@@ -296,14 +300,15 @@ Use simple, clear language appropriate for $_difficulty level learners.''';
       );
 
       // Refresh stats
-      await context.read<GoalsProvider>().refreshGoalStats(_selectedGoalId!);
+      await goalsProvider.refreshGoalStats(_selectedGoalId!);
 
       if (mounted) {
         _showSuccessDialog(deck);
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
+        final messenger = ScaffoldMessenger.of(context);
+        messenger.showSnackBar(
           SnackBar(
             content: Text('Failed to save cards: $e'),
             backgroundColor: AppColors.error,
@@ -428,16 +433,16 @@ Use simple, clear language appropriate for $_difficulty level learners.''';
                   const SizedBox(height: AppSpacing.l),
                   FilledButton(
                     onPressed: () async {
-                      // Navigate to create goal screen
-                      await Navigator.push(
-                        context,
+                      final nav = Navigator.of(context);
+                      final goalsProvider = context.read<GoalsProvider>();
+                      await nav.push(
                         MaterialPageRoute(
                           builder: (context) => const CreateGoalScreen(),
                         ),
                       );
                       // Reload goals after returning
                       if (mounted) {
-                        await context.read<GoalsProvider>().loadGoals();
+                        await goalsProvider.loadGoals();
                       }
                     },
                     child: const Text('Create a Goal'),
@@ -502,6 +507,7 @@ Use simple, clear language appropriate for $_difficulty level learners.''';
             const SizedBox(height: AppSpacing.m),
             OutlinedButton.icon(
               onPressed: () async {
+                final goalsProvider = context.read<GoalsProvider>();
                 await Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -510,7 +516,7 @@ Use simple, clear language appropriate for $_difficulty level learners.''';
                 );
                 // Reload goals after returning
                 if (mounted) {
-                  await context.read<GoalsProvider>().loadGoals();
+                  await goalsProvider.loadGoals();
                 }
               },
               icon: const Icon(Icons.add),

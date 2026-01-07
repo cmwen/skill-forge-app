@@ -264,7 +264,7 @@ class _QuizScreenState extends State<QuizScreen> {
                 Expanded(
                   child: ListView.separated(
                     itemCount: _currentOptions.length,
-                    separatorBuilder: (_, __) =>
+                    separatorBuilder: (_, _) =>
                         const SizedBox(height: AppSpacing.s),
                     itemBuilder: (context, index) {
                       final cardIndex = _currentOptions[index];

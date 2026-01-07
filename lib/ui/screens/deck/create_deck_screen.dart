@@ -32,7 +32,10 @@ class _CreateDeckScreenState extends State<CreateDeckScreen> {
     setState(() => _isCreating = true);
 
     try {
-      final deck = await context.read<DecksProvider>().createDeck(
+      final decksProvider = context.read<DecksProvider>();
+      final goalsProvider = context.read<GoalsProvider>();
+      
+      final deck = await decksProvider.createDeck(
             goalId: widget.goalId,
             name: _nameController.text.trim(),
             description: _descriptionController.text.trim().isEmpty
@@ -42,14 +45,15 @@ class _CreateDeckScreenState extends State<CreateDeckScreen> {
           );
 
       // Refresh goal stats
-      await context.read<GoalsProvider>().refreshGoalStats(widget.goalId);
+      await goalsProvider.refreshGoalStats(widget.goalId);
 
       if (mounted) {
         Navigator.pop(context, deck);
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
+        final messenger = ScaffoldMessenger.of(context);
+        messenger.showSnackBar(
           SnackBar(
             content: Text('Failed to create deck: $e'),
             backgroundColor: AppColors.error,

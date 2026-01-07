@@ -148,10 +148,11 @@ class _MoreScreenState extends State<MoreScreen> {
               value: 'dark',
               groupValue: currentTheme,
               onChanged: (value) async {
-                await prefsService.setThemeMode(value!);
-                if (context.mounted) {
-                  Navigator.pop(context);
-                  setState(() {});
+                if (value != null) {
+                  await prefsService.setThemeMode(value);
+                  if (mounted) {
+                    setState(() {});
+                  }
                 }
               },
             ),
@@ -278,6 +279,7 @@ class _MoreScreenState extends State<MoreScreen> {
 
   Future<void> _configureLlmProvider(BuildContext context, String provider) async {
     final prefsService = context.read<PreferencesService>();
+    final messenger = ScaffoldMessenger.of(context);
     final apiKeyController = TextEditingController();
     final baseUrlController = TextEditingController();
     final modelController = TextEditingController();
@@ -357,7 +359,7 @@ class _MoreScreenState extends State<MoreScreen> {
 
         if (mounted) {
           try {
-            ScaffoldMessenger.of(context).showSnackBar(
+            messenger.showSnackBar(
               SnackBar(content: Text('${provider.toUpperCase()} configured')),
             );
           } catch (e) {
@@ -368,7 +370,7 @@ class _MoreScreenState extends State<MoreScreen> {
       } catch (e) {
         if (mounted) {
           try {
-            ScaffoldMessenger.of(context).showSnackBar(
+            messenger.showSnackBar(
               SnackBar(
                 content: Text('Failed to save config: $e'),
                 backgroundColor: AppColors.error,
@@ -384,6 +386,7 @@ class _MoreScreenState extends State<MoreScreen> {
 
   Future<void> _configureOllama(BuildContext context) async {
     final prefsService = context.read<PreferencesService>();
+    final messenger = ScaffoldMessenger.of(context);
     
     // Load saved configuration
     final savedBaseUrl = prefsService.getLlmBaseUrl() ?? 'http://localhost:11434';
@@ -554,7 +557,7 @@ class _MoreScreenState extends State<MoreScreen> {
                       borderRadius: AppRadius.smallBorderRadius,
                     ),
                     child: const Text(
-                      'Tip: Make sure Ollama is running with \"ollama serve\"',
+                      'Tip: Make sure Ollama is running with "ollama serve"',
                       style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
                     ),
                   ),
@@ -587,7 +590,7 @@ class _MoreScreenState extends State<MoreScreen> {
 
         if (mounted) {
           try {
-            ScaffoldMessenger.of(context).showSnackBar(
+            messenger.showSnackBar(
               const SnackBar(content: Text('Ollama configured successfully')),
             );
           } catch (e) {
@@ -598,7 +601,7 @@ class _MoreScreenState extends State<MoreScreen> {
       } catch (e) {
         if (mounted) {
           try {
-            ScaffoldMessenger.of(context).showSnackBar(
+            messenger.showSnackBar(
               SnackBar(
                 content: Text('Failed to save Ollama config: $e'),
                 backgroundColor: AppColors.error,
