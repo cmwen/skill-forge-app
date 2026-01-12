@@ -135,7 +135,9 @@ class LearningGoal {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is LearningGoal && runtimeType == other.runtimeType && id == other.id;
+      other is LearningGoal &&
+          runtimeType == other.runtimeType &&
+          id == other.id;
 
   @override
   int get hashCode => id.hashCode;

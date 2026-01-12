@@ -49,9 +49,7 @@ class _GoalStatsScreenState extends State<GoalStatsScreen> {
     final progressPercent = goalStats?.progressPercent ?? 0.0;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('${goal.icon} ${goal.name}'),
-      ),
+      appBar: AppBar(title: Text('${goal.icon} ${goal.name}')),
       body: RefreshIndicator(
         onRefresh: _loadData,
         child: ListView(
@@ -95,9 +93,7 @@ class _GoalStatsScreenState extends State<GoalStatsScreen> {
                                   style: Theme.of(context)
                                       .textTheme
                                       .headlineMedium
-                                      ?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                      ?.copyWith(fontWeight: FontWeight.bold),
                                 ),
                                 Text(
                                   'Mastered',
@@ -141,7 +137,9 @@ class _GoalStatsScreenState extends State<GoalStatsScreen> {
                     const SizedBox(height: AppSpacing.m),
                     _StatRow(
                       label: 'Total Study Time',
-                      value: StudyProvider.formatDetailedDuration(totalStudyTime),
+                      value: StudyProvider.formatDetailedDuration(
+                        totalStudyTime,
+                      ),
                     ),
                     _StatRow(
                       label: 'Average per Session',
@@ -224,9 +222,7 @@ class _GoalStatsScreenState extends State<GoalStatsScreen> {
                           : Icons.style,
                       color: AppColors.primary,
                     ),
-                    title: Text(
-                      '${session.cardsReviewed} cards reviewed',
-                    ),
+                    title: Text('${session.cardsReviewed} cards reviewed'),
                     subtitle: Text(
                       '${session.accuracy.toInt()}% accuracy • ${StudyProvider.formatDuration(session.durationSeconds)}',
                     ),
@@ -256,8 +252,10 @@ class _GoalStatsScreenState extends State<GoalStatsScreen> {
     final sessions = provider.goalSessions;
     if (sessions.isEmpty) return '0m';
 
-    final totalSeconds =
-        sessions.fold<int>(0, (sum, s) => sum + s.durationSeconds);
+    final totalSeconds = sessions.fold<int>(
+      0,
+      (sum, s) => sum + s.durationSeconds,
+    );
     final avgSeconds = totalSeconds ~/ sessions.length;
     return StudyProvider.formatDuration(avgSeconds);
   }
@@ -289,11 +287,7 @@ class _StatRow extends StatelessWidget {
   final String value;
   final Color? valueColor;
 
-  const _StatRow({
-    required this.label,
-    required this.value,
-    this.valueColor,
-  });
+  const _StatRow({required this.label, required this.value, this.valueColor});
 
   @override
   Widget build(BuildContext context) {
@@ -302,16 +296,13 @@ class _StatRow extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            label,
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
+          Text(label, style: Theme.of(context).textTheme.bodyMedium),
           Text(
             value,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: valueColor ?? AppColors.textSecondary,
-                  fontWeight: FontWeight.w500,
-                ),
+              color: valueColor ?? AppColors.textSecondary,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ],
       ),

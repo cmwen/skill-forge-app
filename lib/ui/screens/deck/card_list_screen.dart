@@ -10,11 +10,7 @@ class CardListScreen extends StatefulWidget {
   final String deckId;
   final String goalId;
 
-  const CardListScreen({
-    super.key,
-    required this.deckId,
-    required this.goalId,
-  });
+  const CardListScreen({super.key, required this.deckId, required this.goalId});
 
   @override
   State<CardListScreen> createState() => _CardListScreenState();
@@ -87,8 +83,10 @@ class _CardListScreenState extends State<CardListScreen> {
             ),
             ListTile(
               leading: const Icon(Icons.delete_outline, color: AppColors.error),
-              title: const Text('Delete Card',
-                  style: TextStyle(color: AppColors.error)),
+              title: const Text(
+                'Delete Card',
+                style: TextStyle(color: AppColors.error),
+              ),
               onTap: () {
                 Navigator.pop(context);
                 _confirmDeleteCard(card);
@@ -119,9 +117,7 @@ class _CardListScreenState extends State<CardListScreen> {
               TextField(
                 controller: frontController,
                 maxLines: 3,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                ),
+                decoration: const InputDecoration(border: OutlineInputBorder()),
               ),
               const SizedBox(height: AppSpacing.m),
               const Text('Back'),
@@ -129,9 +125,7 @@ class _CardListScreenState extends State<CardListScreen> {
               TextField(
                 controller: backController,
                 maxLines: 3,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                ),
+                decoration: const InputDecoration(border: OutlineInputBorder()),
               ),
               const SizedBox(height: AppSpacing.m),
               const Text('Notes (optional)'),
@@ -139,9 +133,7 @@ class _CardListScreenState extends State<CardListScreen> {
               TextField(
                 controller: notesController,
                 maxLines: 2,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                ),
+                decoration: const InputDecoration(border: OutlineInputBorder()),
               ),
             ],
           ),
@@ -160,7 +152,9 @@ class _CardListScreenState extends State<CardListScreen> {
                     ? null
                     : notesController.text.trim(),
               );
-              await context.read<FlashcardsProvider>().updateFlashcard(updatedCard);
+              await context.read<FlashcardsProvider>().updateFlashcard(
+                updatedCard,
+              );
               if (context.mounted) Navigator.pop(context);
             },
             child: const Text('Save'),
@@ -194,7 +188,9 @@ class _CardListScreenState extends State<CardListScreen> {
                 nextReviewAt: DateTime.now(),
               );
               nav.pop();
-              await context.read<FlashcardsProvider>().updateFlashcard(resetCard);
+              await context.read<FlashcardsProvider>().updateFlashcard(
+                resetCard,
+              );
             },
             child: const Text('Reset'),
           ),
@@ -335,60 +331,60 @@ class _CardListScreenState extends State<CardListScreen> {
       body: flashcardsProvider.isLoading
           ? const Center(child: CircularProgressIndicator())
           : filteredCards.isEmpty
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        _searchQuery.isNotEmpty
-                            ? Icons.search_off
-                            : Icons.layers_outlined,
-                        size: 64,
-                        color: AppColors.textSecondary,
-                      ),
-                      const SizedBox(height: AppSpacing.m),
-                      Text(
-                        _searchQuery.isNotEmpty
-                            ? 'No cards match your search'
-                            : 'No cards in this deck',
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      if (_searchQuery.isEmpty) ...[
-                        const SizedBox(height: AppSpacing.m),
-                        FilledButton.icon(
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    AddCardScreen(deckId: widget.deckId),
-                              ),
-                            );
-                          },
-                          icon: const Icon(Icons.add),
-                          label: const Text('Add Card'),
-                        ),
-                      ],
-                    ],
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    _searchQuery.isNotEmpty
+                        ? Icons.search_off
+                        : Icons.layers_outlined,
+                    size: 64,
+                    color: AppColors.textSecondary,
                   ),
-                )
-              : ListView.builder(
-                  padding: AppSpacing.screenPadding,
-                  itemCount: filteredCards.length,
-                  itemBuilder: (context, index) {
-                    final card = filteredCards[index];
-                    return _CardListItem(
-                      card: card,
-                      onTap: () => _editCard(card),
-                      onLongPress: () => _showCardOptions(card),
-                    );
-                  },
-                ),
+                  const SizedBox(height: AppSpacing.m),
+                  Text(
+                    _searchQuery.isNotEmpty
+                        ? 'No cards match your search'
+                        : 'No cards in this deck',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  if (_searchQuery.isEmpty) ...[
+                    const SizedBox(height: AppSpacing.m),
+                    FilledButton.icon(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                AddCardScreen(deckId: widget.deckId),
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.add),
+                      label: const Text('Add Card'),
+                    ),
+                  ],
+                ],
+              ),
+            )
+          : ListView.builder(
+              padding: AppSpacing.screenPadding,
+              itemCount: filteredCards.length,
+              itemBuilder: (context, index) {
+                final card = filteredCards[index];
+                return _CardListItem(
+                  card: card,
+                  onTap: () => _editCard(card),
+                  onLongPress: () => _showCardOptions(card),
+                );
+              },
+            ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           final nav = Navigator.of(context);
           final decksProvider = context.read<DecksProvider>();
           final goalsProvider = context.read<GoalsProvider>();
-          
+
           final result = await nav.push(
             MaterialPageRoute(
               builder: (context) => AddCardScreen(deckId: widget.deckId),
@@ -449,8 +445,8 @@ class _CardListItem extends StatelessWidget {
               Text(
                 card.back,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
+                  color: AppColors.textSecondary,
+                ),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -459,9 +455,9 @@ class _CardListItem extends StatelessWidget {
                 Text(
                   'Notes: ${card.notes}',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppColors.textSecondary,
-                        fontStyle: FontStyle.italic,
-                      ),
+                    color: AppColors.textSecondary,
+                    fontStyle: FontStyle.italic,
+                  ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -472,15 +468,15 @@ class _CardListItem extends StatelessWidget {
                   Text(
                     'Reviews: ${card.reviewCount}',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppColors.textSecondary,
-                        ),
+                      color: AppColors.textSecondary,
+                    ),
                   ),
                   const SizedBox(width: AppSpacing.m),
                   Text(
                     'Accuracy: ${card.accuracy.toInt()}%',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppColors.textSecondary,
-                        ),
+                      color: AppColors.textSecondary,
+                    ),
                   ),
                 ],
               ),

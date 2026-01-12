@@ -49,18 +49,14 @@ void main() {
       await dbHelper.insertGoal(goal);
 
       final deck = Deck.create(
-          goalId: goal.id,
-          name: 'Test Deck',
-          source: 'Manual',
-        );
+        goalId: goal.id,
+        name: 'Test Deck',
+        source: 'Manual',
+      );
       await dbHelper.insertDeck(deck);
 
       await dbHelper.insertFlashcard(
-        Flashcard.create(
-          deckId: deck.id,
-          front: 'Question',
-          back: 'Answer',
-        ),
+        Flashcard.create(deckId: deck.id, front: 'Question', back: 'Answer'),
       );
 
       final json = await exportService.exportAsJson();
@@ -79,26 +75,18 @@ void main() {
       await dbHelper.insertGoal(goal);
 
       final deck = Deck.create(
-          goalId: goal.id,
-          name: 'Verbs',
-          source: 'Manual',
-        );
+        goalId: goal.id,
+        name: 'Verbs',
+        source: 'Manual',
+      );
       await dbHelper.insertDeck(deck);
 
       await dbHelper.insertFlashcard(
-        Flashcard.create(
-          deckId: deck.id,
-          front: 'Hola',
-          back: 'Hello',
-        ),
+        Flashcard.create(deckId: deck.id, front: 'Hola', back: 'Hello'),
       );
 
       await dbHelper.insertFlashcard(
-        Flashcard.create(
-          deckId: deck.id,
-          front: 'Adiós',
-          back: 'Goodbye',
-        ),
+        Flashcard.create(deckId: deck.id, front: 'Adiós', back: 'Goodbye'),
       );
 
       final csv = await exportService.exportAsCsv();
@@ -117,10 +105,10 @@ void main() {
       await dbHelper.insertGoal(goal);
 
       final deck = Deck.create(
-          goalId: goal.id,
-          name: 'Deck, with, commas',
-          source: 'Manual',
-        );
+        goalId: goal.id,
+        name: 'Deck, with, commas',
+        source: 'Manual',
+      );
       await dbHelper.insertDeck(deck);
 
       await dbHelper.insertFlashcard(
@@ -169,11 +157,7 @@ void main() {
         name: 'Test Deck',
         source: 'Import',
       );
-      final card = Flashcard.create(
-        deckId: deck.id,
-        front: 'Q',
-        back: 'A',
-      );
+      final card = Flashcard.create(deckId: deck.id, front: 'Q', back: 'A');
       final session = StudySession.create(
         goalId: goal.id,
         deckId: deck.id,

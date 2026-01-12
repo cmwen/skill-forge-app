@@ -85,24 +85,17 @@ class _RatingButton extends StatelessWidget {
           ),
           child: Column(
             children: [
-              Icon(
-                icon,
-                color: color,
-                size: 28,
-              ),
+              Icon(icon, color: color, size: 28),
               const SizedBox(height: AppSpacing.xs),
               Text(
                 label,
-                style: TextStyle(
-                  color: color,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(color: color, fontWeight: FontWeight.bold),
               ),
               Text(
                 subtitle,
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: color.withValues(alpha: 0.8),
-                    ),
+                  color: color.withValues(alpha: 0.8),
+                ),
               ),
             ],
           ),
@@ -157,9 +150,9 @@ class StudyProgressIndicator extends StatelessWidget {
             ),
             Text(
               'Correct: $correctCount',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: AppColors.success,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: AppColors.success),
             ),
           ],
         ),
