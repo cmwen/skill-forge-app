@@ -52,9 +52,10 @@ class _FlashcardWidgetState extends State<FlashcardWidget>
       duration: AppDurations.cardFlip,
       vsync: this,
     );
-    _animation = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _animation = Tween<double>(
+      begin: 0,
+      end: 1,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
     _animation.addListener(() {
       if (_animation.value >= 0.5 && _showingFront != !widget.showingFront) {
@@ -163,9 +164,9 @@ class _FlashcardWidgetState extends State<FlashcardWidget>
             Text(
               isBack ? 'ANSWER' : 'QUESTION',
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: AppColors.textDisabled,
-                    letterSpacing: 1.5,
-                  ),
+                color: AppColors.textDisabled,
+                letterSpacing: 1.5,
+              ),
             ),
             const SizedBox(height: AppSpacing.m),
 
@@ -184,9 +185,9 @@ class _FlashcardWidgetState extends State<FlashcardWidget>
               Text(
                 notes,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontStyle: FontStyle.italic,
-                      color: AppColors.textSecondary,
-                    ),
+                  fontStyle: FontStyle.italic,
+                  color: AppColors.textSecondary,
+                ),
                 textAlign: TextAlign.center,
               ),
             ],
@@ -195,9 +196,9 @@ class _FlashcardWidgetState extends State<FlashcardWidget>
             const SizedBox(height: AppSpacing.l),
             Text(
               isBack ? 'Tap to see question' : 'Tap to reveal answer',
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: AppColors.textDisabled,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.labelSmall?.copyWith(color: AppColors.textDisabled),
             ),
           ],
         ),

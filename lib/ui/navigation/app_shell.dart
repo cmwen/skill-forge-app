@@ -36,7 +36,7 @@ class _AppShellState extends State<AppShell> {
   @override
   Widget build(BuildContext context) {
     final navigationProvider = context.watch<NavigationProvider>();
-    
+
     return Scaffold(
       body: IndexedStack(
         index: navigationProvider.selectedIndex,

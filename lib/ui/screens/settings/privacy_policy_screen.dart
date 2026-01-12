@@ -8,9 +8,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Privacy Policy'),
-      ),
+      appBar: AppBar(title: const Text('Privacy Policy')),
       body: ListView(
         padding: AppSpacing.screenPadding,
         children: [
@@ -21,9 +19,9 @@ class PrivacyPolicyScreen extends StatelessWidget {
           const SizedBox(height: AppSpacing.s),
           Text(
             'Last updated: January 2026',
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: AppColors.textSecondary,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: AppColors.textSecondary),
           ),
           const SizedBox(height: AppSpacing.l),
           const _PolicySection(
@@ -141,8 +139,8 @@ We're committed to transparency and will respond to privacy-related inquiries pr
                     child: Text(
                       'Privacy First: Your learning data never leaves your device.',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w500,
-                          ),
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                 ],
@@ -160,26 +158,18 @@ class _PolicySection extends StatelessWidget {
   final String title;
   final String content;
 
-  const _PolicySection({
-    required this.title,
-    required this.content,
-  });
+  const _PolicySection({required this.title, required this.content});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
+        Text(title, style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: AppSpacing.s),
         Text(
           content.trim(),
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                height: 1.6,
-              ),
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(height: 1.6),
         ),
       ],
     );

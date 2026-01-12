@@ -34,15 +34,15 @@ class _CreateDeckScreenState extends State<CreateDeckScreen> {
     try {
       final decksProvider = context.read<DecksProvider>();
       final goalsProvider = context.read<GoalsProvider>();
-      
+
       final deck = await decksProvider.createDeck(
-            goalId: widget.goalId,
-            name: _nameController.text.trim(),
-            description: _descriptionController.text.trim().isEmpty
-                ? null
-                : _descriptionController.text.trim(),
-            source: 'Manual',
-          );
+        goalId: widget.goalId,
+        name: _nameController.text.trim(),
+        description: _descriptionController.text.trim().isEmpty
+            ? null
+            : _descriptionController.text.trim(),
+        source: 'Manual',
+      );
 
       // Refresh goal stats
       await goalsProvider.refreshGoalStats(widget.goalId);
@@ -70,9 +70,7 @@ class _CreateDeckScreenState extends State<CreateDeckScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Create Deck'),
-      ),
+      appBar: AppBar(title: const Text('Create Deck')),
       body: Form(
         key: _formKey,
         child: ListView(

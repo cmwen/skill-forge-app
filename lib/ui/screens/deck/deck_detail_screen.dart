@@ -48,10 +48,8 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
   void _startQuiz() {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => QuizScreen(
-          deckId: widget.deckId,
-          goalId: widget.goalId,
-        ),
+        builder: (context) =>
+            QuizScreen(deckId: widget.deckId, goalId: widget.goalId),
       ),
     );
   }
@@ -61,7 +59,7 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
     final flashcardsProvider = context.read<FlashcardsProvider>();
     final decksProvider = context.read<DecksProvider>();
     final goalsProvider = context.read<GoalsProvider>();
-    
+
     final result = await nav.push(
       MaterialPageRoute(
         builder: (context) => AddCardScreen(deckId: widget.deckId),
@@ -78,10 +76,8 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
   void _viewAllCards() {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => CardListScreen(
-          deckId: widget.deckId,
-          goalId: widget.goalId,
-        ),
+        builder: (context) =>
+            CardListScreen(deckId: widget.deckId, goalId: widget.goalId),
       ),
     );
   }
@@ -126,8 +122,10 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
             ),
             ListTile(
               leading: const Icon(Icons.delete_outline, color: AppColors.error),
-              title: const Text('Delete Deck',
-                  style: TextStyle(color: AppColors.error)),
+              title: const Text(
+                'Delete Deck',
+                style: TextStyle(color: AppColors.error),
+              ),
               onTap: () {
                 Navigator.pop(context);
                 _confirmDeleteDeck();
@@ -227,9 +225,9 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
 
       if (mounted) {
         Navigator.pop(context); // Close loading
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Export complete')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Export complete')));
       }
     } catch (e) {
       if (mounted) {
@@ -275,133 +273,133 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
       body: flashcardsProvider.isLoading
           ? const Center(child: CircularProgressIndicator())
           : flashcardsProvider.flashcards.isEmpty
-              ? EmptyStates.noCards(onAdd: _navigateToAddCard)
-              : ListView(
-                  padding: AppSpacing.screenPadding,
-                  children: [
-                    // Goal context
-                    Consumer<GoalsProvider>(
-                      builder: (context, goalsProvider, _) {
-                        final goal = goalsProvider.getGoalById(widget.goalId);
-                        if (goal == null) return const SizedBox.shrink();
-                        return Text(
-                          'Goal: ${goal.icon} ${goal.name}',
-                          style:
-                              Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: AppColors.textSecondary,
-                                  ),
-                        );
-                      },
-                    ),
-                    const SizedBox(height: AppSpacing.s),
-
-                    // Stats row
-                    Text(
-                      '$cardCount cards • $masteredCount mastered (${(progressPercent * 100).toInt()}%)',
-                      style: Theme.of(context).textTheme.titleSmall,
-                    ),
-                    const SizedBox(height: AppSpacing.l),
-
-                    // Practice options section
-                    Text(
-                      'How do you want to practice?',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    const SizedBox(height: AppSpacing.m),
-
-                    // Flashcards option
-                    _PracticeOptionCard(
-                      icon: Icons.style,
-                      title: 'Flashcards',
-                      subtitle: 'Classic card flipping',
-                      actions: [
-                        TextButton(
-                          onPressed: () => _startFlashcardStudy(),
-                          child: const Text('Study All'),
-                        ),
-                        if (dueCount > 0)
-                          FilledButton(
-                            onPressed: () => _startFlashcardStudy(dueOnly: true),
-                            child: Text('Review Due ($dueCount)'),
-                          )
-                        else
-                          FilledButton(
-                            onPressed: () => _startFlashcardStudy(),
-                            child: const Text('Review Unmastered'),
-                          ),
-                      ],
-                    ),
-                    const SizedBox(height: AppSpacing.m),
-
-                    // Quiz option
-                    _PracticeOptionCard(
-                      icon: Icons.quiz,
-                      title: 'Quiz Mode',
-                      subtitle: 'Test your knowledge',
-                      actions: [
-                        FilledButton(
-                          onPressed: cardCount >= 4 ? _startQuiz : null,
-                          child: const Text('Start Quiz'),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: AppSpacing.l),
-
-                    // Deck contents section
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Deck contents',
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                        TextButton(
-                          onPressed: _viewAllCards,
-                          child: const Text('View All Cards'),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: AppSpacing.m),
-
-                    // Statistics
-                    Card(
-                      child: Padding(
-                        padding: AppSpacing.cardPadding,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Statistics',
-                              style: Theme.of(context).textTheme.titleSmall,
-                            ),
-                            const SizedBox(height: AppSpacing.m),
-                            _StatRow(
-                              label: 'Mastery',
-                              value: '$masteredCount/$cardCount cards (${(progressPercent * 100).toInt()}%)',
-                            ),
-                            _StatRow(
-                              label: 'Created',
-                              value: _formatDate(deck.createdAt),
-                            ),
-                            _StatRow(
-                              label: 'Last studied',
-                              value: deck.lastStudiedAt != null
-                                  ? _formatDate(deck.lastStudiedAt!)
-                                  : 'Never',
-                            ),
-                            _StatRow(
-                              label: 'Total study time',
-                              value: StudyProvider.formatDetailedDuration(
-                                deck.totalStudyTimeSeconds,
-                              ),
-                            ),
-                          ],
-                        ),
+          ? EmptyStates.noCards(onAdd: _navigateToAddCard)
+          : ListView(
+              padding: AppSpacing.screenPadding,
+              children: [
+                // Goal context
+                Consumer<GoalsProvider>(
+                  builder: (context, goalsProvider, _) {
+                    final goal = goalsProvider.getGoalById(widget.goalId);
+                    if (goal == null) return const SizedBox.shrink();
+                    return Text(
+                      'Goal: ${goal.icon} ${goal.name}',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: AppColors.textSecondary,
                       ),
+                    );
+                  },
+                ),
+                const SizedBox(height: AppSpacing.s),
+
+                // Stats row
+                Text(
+                  '$cardCount cards • $masteredCount mastered (${(progressPercent * 100).toInt()}%)',
+                  style: Theme.of(context).textTheme.titleSmall,
+                ),
+                const SizedBox(height: AppSpacing.l),
+
+                // Practice options section
+                Text(
+                  'How do you want to practice?',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                const SizedBox(height: AppSpacing.m),
+
+                // Flashcards option
+                _PracticeOptionCard(
+                  icon: Icons.style,
+                  title: 'Flashcards',
+                  subtitle: 'Classic card flipping',
+                  actions: [
+                    TextButton(
+                      onPressed: () => _startFlashcardStudy(),
+                      child: const Text('Study All'),
                     ),
-                    const SizedBox(height: AppSpacing.xxl),
+                    if (dueCount > 0)
+                      FilledButton(
+                        onPressed: () => _startFlashcardStudy(dueOnly: true),
+                        child: Text('Review Due ($dueCount)'),
+                      )
+                    else
+                      FilledButton(
+                        onPressed: () => _startFlashcardStudy(),
+                        child: const Text('Review Unmastered'),
+                      ),
                   ],
                 ),
+                const SizedBox(height: AppSpacing.m),
+
+                // Quiz option
+                _PracticeOptionCard(
+                  icon: Icons.quiz,
+                  title: 'Quiz Mode',
+                  subtitle: 'Test your knowledge',
+                  actions: [
+                    FilledButton(
+                      onPressed: cardCount >= 4 ? _startQuiz : null,
+                      child: const Text('Start Quiz'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.l),
+
+                // Deck contents section
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Deck contents',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    TextButton(
+                      onPressed: _viewAllCards,
+                      child: const Text('View All Cards'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.m),
+
+                // Statistics
+                Card(
+                  child: Padding(
+                    padding: AppSpacing.cardPadding,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Statistics',
+                          style: Theme.of(context).textTheme.titleSmall,
+                        ),
+                        const SizedBox(height: AppSpacing.m),
+                        _StatRow(
+                          label: 'Mastery',
+                          value:
+                              '$masteredCount/$cardCount cards (${(progressPercent * 100).toInt()}%)',
+                        ),
+                        _StatRow(
+                          label: 'Created',
+                          value: _formatDate(deck.createdAt),
+                        ),
+                        _StatRow(
+                          label: 'Last studied',
+                          value: deck.lastStudiedAt != null
+                              ? _formatDate(deck.lastStudiedAt!)
+                              : 'Never',
+                        ),
+                        _StatRow(
+                          label: 'Total study time',
+                          value: StudyProvider.formatDetailedDuration(
+                            deck.totalStudyTimeSeconds,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.xxl),
+              ],
+            ),
       floatingActionButton: FloatingActionButton(
         onPressed: _navigateToAddCard,
         child: const Icon(Icons.add),
@@ -453,10 +451,7 @@ class _PracticeOptionCard extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      title,
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
+                    Text(title, style: Theme.of(context).textTheme.titleMedium),
                     Text(
                       subtitle,
                       style: Theme.of(context).textTheme.bodySmall,
@@ -469,7 +464,9 @@ class _PracticeOptionCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: actions
-                  .expand((action) => [action, const SizedBox(width: AppSpacing.s)])
+                  .expand(
+                    (action) => [action, const SizedBox(width: AppSpacing.s)],
+                  )
                   .take(actions.length * 2 - 1)
                   .toList(),
             ),
@@ -493,15 +490,12 @@ class _StatRow extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            label,
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
+          Text(label, style: Theme.of(context).textTheme.bodyMedium),
           Text(
             value,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: AppColors.textSecondary,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary),
           ),
         ],
       ),

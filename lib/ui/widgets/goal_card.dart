@@ -59,10 +59,7 @@ class GoalCard extends StatelessWidget {
               // Header row with icon and name
               Row(
                 children: [
-                  Text(
-                    icon,
-                    style: const TextStyle(fontSize: 24),
-                  ),
+                  Text(icon, style: const TextStyle(fontSize: 24)),
                   const SizedBox(width: AppSpacing.s),
                   Expanded(
                     child: Text(
@@ -112,9 +109,9 @@ class GoalCard extends StatelessWidget {
               // Last studied
               Text(
                 _formatLastStudied(lastStudiedAt),
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppColors.textDisabled,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: AppColors.textDisabled),
               ),
             ],
           ),

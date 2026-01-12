@@ -23,18 +23,55 @@ class _CreateGoalScreenState extends State<CreateGoalScreen> {
 
   // Common emoji icons for goals
   static const List<String> _iconOptions = [
-    '📚', '🎯', '💻', '🌍', '✈️', '🎵', '🎮', '⚽',
-    '🇪🇸', '🇫🇷', '🇩🇪', '🇯🇵', '🇨🇳', '🇰🇷', '🇮🇹', '🇧🇷',
-    '🔬', '🧮', '📊', '🎨', '✍️', '🏋️', '🧘', '🍳',
+    '📚',
+    '🎯',
+    '💻',
+    '🌍',
+    '✈️',
+    '🎵',
+    '🎮',
+    '⚽',
+    '🇪🇸',
+    '🇫🇷',
+    '🇩🇪',
+    '🇯🇵',
+    '🇨🇳',
+    '🇰🇷',
+    '🇮🇹',
+    '🇧🇷',
+    '🔬',
+    '🧮',
+    '📊',
+    '🎨',
+    '✍️',
+    '🏋️',
+    '🧘',
+    '🍳',
   ];
 
   // Goal templates
   static const List<Map<String, String>> _templates = [
-    {'name': 'Language Learning', 'icon': '🌍', 'description': 'Learn a new language'},
-    {'name': 'Programming', 'icon': '💻', 'description': 'Master coding skills'},
-    {'name': 'Academic', 'icon': '📚', 'description': 'Study for school or exams'},
+    {
+      'name': 'Language Learning',
+      'icon': '🌍',
+      'description': 'Learn a new language',
+    },
+    {
+      'name': 'Programming',
+      'icon': '💻',
+      'description': 'Master coding skills',
+    },
+    {
+      'name': 'Academic',
+      'icon': '📚',
+      'description': 'Study for school or exams',
+    },
     {'name': 'Hobby', 'icon': '🎨', 'description': 'Learn a new hobby'},
-    {'name': 'Professional', 'icon': '💼', 'description': 'Career development skills'},
+    {
+      'name': 'Professional',
+      'icon': '💼',
+      'description': 'Career development skills',
+    },
   ];
 
   @override
@@ -73,13 +110,13 @@ class _CreateGoalScreenState extends State<CreateGoalScreen> {
 
     try {
       final goal = await context.read<GoalsProvider>().createGoal(
-            name: _nameController.text.trim(),
-            description: _descriptionController.text.trim().isEmpty
-                ? null
-                : _descriptionController.text.trim(),
-            icon: _selectedIcon,
-            targetDate: _targetDate,
-          );
+        name: _nameController.text.trim(),
+        description: _descriptionController.text.trim().isEmpty
+            ? null
+            : _descriptionController.text.trim(),
+        icon: _selectedIcon,
+        targetDate: _targetDate,
+      );
 
       if (mounted) {
         // Show success and offer next actions
@@ -153,9 +190,7 @@ class _CreateGoalScreenState extends State<CreateGoalScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Create Learning Goal'),
-      ),
+      appBar: AppBar(title: const Text('Create Learning Goal')),
       body: Form(
         key: _formKey,
         child: ListView(
@@ -193,8 +228,7 @@ class _CreateGoalScreenState extends State<CreateGoalScreen> {
                     width: 44,
                     height: 44,
                     decoration: BoxDecoration(
-                      color:
-                          isSelected ? AppColors.primary : AppColors.surface,
+                      color: isSelected ? AppColors.primary : AppColors.surface,
                       borderRadius: AppRadius.smallBorderRadius,
                       border: Border.all(
                         color: isSelected

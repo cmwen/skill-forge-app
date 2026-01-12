@@ -5,7 +5,7 @@ import 'preferences_service.dart';
 class TtsService {
   final FlutterTts _tts = FlutterTts();
   final PreferencesService _prefs;
-  
+
   bool _isInitialized = false;
   bool _isSpeaking = false;
 

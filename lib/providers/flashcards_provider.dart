@@ -175,9 +175,9 @@ class FlashcardsProvider extends ChangeNotifier {
   /// Get a flashcard by ID
   Flashcard? getFlashcardById(String cardId) {
     return _flashcards.cast<Flashcard?>().firstWhere(
-          (c) => c?.id == cardId,
-          orElse: () => null,
-        );
+      (c) => c?.id == cardId,
+      orElse: () => null,
+    );
   }
 
   /// Clear current state

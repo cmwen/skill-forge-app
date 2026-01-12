@@ -21,9 +21,7 @@ class _MoreScreenState extends State<MoreScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('More'),
-      ),
+      appBar: AppBar(title: const Text('More')),
       body: ListView(
         children: [
           // Learning Goals section
@@ -35,9 +33,7 @@ class _MoreScreenState extends State<MoreScreen> {
             onTap: () {
               // Navigate to Goals tab
               Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const GoalsScreen(),
-                ),
+                MaterialPageRoute(builder: (context) => const GoalsScreen()),
               );
             },
           ),
@@ -127,7 +123,7 @@ class _MoreScreenState extends State<MoreScreen> {
   void _showAppearanceSettings(BuildContext context) {
     final prefsService = context.read<PreferencesService>();
     final currentTheme = prefsService.getThemeMode();
-    
+
     showModalBottomSheet(
       context: context,
       builder: (context) => SafeArea(
@@ -179,18 +175,19 @@ class _MoreScreenState extends State<MoreScreen> {
 
   void _showLearningPreferences(BuildContext context) {
     final prefsService = context.read<PreferencesService>();
-    
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      builder: (context) => _LearningPreferencesSheet(prefsService: prefsService),
+      builder: (context) =>
+          _LearningPreferencesSheet(prefsService: prefsService),
     );
   }
 
   void _showLLMSettings(BuildContext context) {
     final prefsService = context.read<PreferencesService>();
     final currentProvider = prefsService.getLlmProvider();
-    
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -211,8 +208,8 @@ class _MoreScreenState extends State<MoreScreen> {
                     ? 'Current: Not configured\nUsing copy/paste workflow'
                     : 'Current: ${currentProvider.toUpperCase()}',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
+                  color: AppColors.textSecondary,
+                ),
               ),
               const SizedBox(height: AppSpacing.l),
               Text(
@@ -277,7 +274,10 @@ class _MoreScreenState extends State<MoreScreen> {
     );
   }
 
-  Future<void> _configureLlmProvider(BuildContext context, String provider) async {
+  Future<void> _configureLlmProvider(
+    BuildContext context,
+    String provider,
+  ) async {
     final prefsService = context.read<PreferencesService>();
     final messenger = ScaffoldMessenger.of(context);
     final apiKeyController = TextEditingController();
@@ -346,7 +346,7 @@ class _MoreScreenState extends State<MoreScreen> {
     if (result == true && mounted) {
       try {
         await prefsService.setLlmProvider(provider);
-        
+
         if (apiKeyController.text.isNotEmpty) {
           await prefsService.setLlmApiKey(apiKeyController.text);
         }
@@ -387,18 +387,19 @@ class _MoreScreenState extends State<MoreScreen> {
   Future<void> _configureOllama(BuildContext context) async {
     final prefsService = context.read<PreferencesService>();
     final messenger = ScaffoldMessenger.of(context);
-    
+
     // Load saved configuration
-    final savedBaseUrl = prefsService.getLlmBaseUrl() ?? 'http://localhost:11434';
+    final savedBaseUrl =
+        prefsService.getLlmBaseUrl() ?? 'http://localhost:11434';
     final savedModel = prefsService.getLlmModel();
-    
+
     final baseUrlController = TextEditingController(text: savedBaseUrl);
     String? selectedModel = savedModel;
     List<String> availableModels = [];
     bool isTestingConnection = false;
     bool connectionSuccess = false;
     String? connectionError;
-    
+
     final result = await showDialog<bool>(
       context: context,
       builder: (BuildContext dialogContext) => StatefulBuilder(
@@ -420,51 +421,54 @@ class _MoreScreenState extends State<MoreScreen> {
                     ),
                   ),
                   const SizedBox(height: AppSpacing.m),
-                  
+
                   // Test Connection Button
                   SizedBox(
                     width: double.infinity,
                     child: OutlinedButton.icon(
-                      onPressed: isTestingConnection ? null : () async {
-                        setDialogState(() {
-                          isTestingConnection = true;
-                          connectionSuccess = false;
-                          connectionError = null;
-                          availableModels = [];
-                        });
+                      onPressed: isTestingConnection
+                          ? null
+                          : () async {
+                              setDialogState(() {
+                                isTestingConnection = true;
+                                connectionSuccess = false;
+                                connectionError = null;
+                                availableModels = [];
+                              });
 
-                        try {
-                          // Create a temporary client with the specified baseUrl
-                          final testClient = OllamaClient(
-                            baseUrl: baseUrlController.text.trim(),
-                          );
-                          final response = await testClient.listModels();
-                          
-                          if (response.models.isNotEmpty) {
-                            setDialogState(() {
-                              connectionSuccess = true;
-                              availableModels = response.models
-                                  .map((m) => m.name)
-                                  .toList();
-                              if (availableModels.isNotEmpty) {
-                                selectedModel = availableModels.first;
+                              try {
+                                // Create a temporary client with the specified baseUrl
+                                final testClient = OllamaClient(
+                                  baseUrl: baseUrlController.text.trim(),
+                                );
+                                final response = await testClient.listModels();
+
+                                if (response.models.isNotEmpty) {
+                                  setDialogState(() {
+                                    connectionSuccess = true;
+                                    availableModels = response.models
+                                        .map((m) => m.name)
+                                        .toList();
+                                    if (availableModels.isNotEmpty) {
+                                      selectedModel = availableModels.first;
+                                    }
+                                  });
+                                } else {
+                                  setDialogState(() {
+                                    connectionError =
+                                        'No models found on server';
+                                  });
+                                }
+                              } catch (e) {
+                                setDialogState(() {
+                                  connectionError = e.toString();
+                                });
+                              } finally {
+                                setDialogState(() {
+                                  isTestingConnection = false;
+                                });
                               }
-                            });
-                          } else {
-                            setDialogState(() {
-                              connectionError = 'No models found on server';
-                            });
-                          }
-                        } catch (e) {
-                          setDialogState(() {
-                            connectionError = e.toString();
-                          });
-                        } finally {
-                          setDialogState(() {
-                            isTestingConnection = false;
-                          });
-                        }
-                      },
+                            },
                       icon: isTestingConnection
                           ? const SizedBox(
                               width: 16,
@@ -472,10 +476,12 @@ class _MoreScreenState extends State<MoreScreen> {
                               child: CircularProgressIndicator(strokeWidth: 2),
                             )
                           : const Icon(Icons.wifi_find),
-                      label: Text(isTestingConnection ? 'Testing...' : 'Test Connection'),
+                      label: Text(
+                        isTestingConnection ? 'Testing...' : 'Test Connection',
+                      ),
                     ),
                   ),
-                  
+
                   // Connection Status
                   if (connectionSuccess) ...[
                     const SizedBox(height: AppSpacing.s),
@@ -488,19 +494,26 @@ class _MoreScreenState extends State<MoreScreen> {
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.check_circle, color: AppColors.success, size: 20),
+                          const Icon(
+                            Icons.check_circle,
+                            color: AppColors.success,
+                            size: 20,
+                          ),
                           const SizedBox(width: AppSpacing.s),
                           Expanded(
                             child: Text(
                               'Connected successfully! Found ${availableModels.length} models',
-                              style: const TextStyle(color: AppColors.success, fontSize: 12),
+                              style: const TextStyle(
+                                color: AppColors.success,
+                                fontSize: 12,
+                              ),
                             ),
                           ),
                         ],
                       ),
                     ),
                   ],
-                  
+
                   if (connectionError != null) ...[
                     const SizedBox(height: AppSpacing.s),
                     Container(
@@ -512,19 +525,26 @@ class _MoreScreenState extends State<MoreScreen> {
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.error_outline, color: AppColors.error, size: 20),
+                          const Icon(
+                            Icons.error_outline,
+                            color: AppColors.error,
+                            size: 20,
+                          ),
                           const SizedBox(width: AppSpacing.s),
                           Expanded(
                             child: Text(
                               'Connection failed: $connectionError',
-                              style: const TextStyle(color: AppColors.error, fontSize: 12),
+                              style: const TextStyle(
+                                color: AppColors.error,
+                                fontSize: 12,
+                              ),
                             ),
                           ),
                         ],
                       ),
                     ),
                   ],
-                  
+
                   // Model Dropdown
                   if (availableModels.isNotEmpty) ...[
                     const SizedBox(height: AppSpacing.m),
@@ -548,7 +568,7 @@ class _MoreScreenState extends State<MoreScreen> {
                       },
                     ),
                   ],
-                  
+
                   const SizedBox(height: AppSpacing.m),
                   Container(
                     padding: const EdgeInsets.all(AppSpacing.s),
@@ -558,7 +578,10 @@ class _MoreScreenState extends State<MoreScreen> {
                     ),
                     child: const Text(
                       'Tip: Make sure Ollama is running with "ollama serve"',
-                      style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: AppColors.textSecondary,
+                      ),
                     ),
                   ),
                 ],
@@ -570,7 +593,9 @@ class _MoreScreenState extends State<MoreScreen> {
                 child: const Text('Cancel'),
               ),
               FilledButton(
-                onPressed: connectionSuccess ? () => Navigator.pop(context, true) : null,
+                onPressed: connectionSuccess
+                    ? () => Navigator.pop(context, true)
+                    : null,
                 child: const Text('Save'),
               ),
             ],
@@ -583,7 +608,7 @@ class _MoreScreenState extends State<MoreScreen> {
       try {
         await prefsService.setLlmProvider('ollama');
         await prefsService.setLlmBaseUrl(baseUrlController.text.trim());
-        
+
         if (selectedModel != null) {
           await prefsService.setLlmModel(selectedModel!);
         }
@@ -665,16 +690,16 @@ class _MoreScreenState extends State<MoreScreen> {
         barrierDismissible: false,
         builder: (context) => const Center(child: CircularProgressIndicator()),
       );
-      
+
       try {
         await exportService.exportAndShare(format: format);
 
         if (context.mounted) {
           Navigator.pop(context); // Close loading
           try {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Export complete')),
-            );
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(const SnackBar(content: Text('Export complete')));
           } catch (e) {
             // Context may have been deactivated
           }
@@ -757,7 +782,8 @@ class _MoreScreenState extends State<MoreScreen> {
         showDialog(
           context: context,
           barrierDismissible: false,
-          builder: (context) => const Center(child: CircularProgressIndicator()),
+          builder: (context) =>
+              const Center(child: CircularProgressIndicator()),
         );
       }
 
@@ -855,9 +881,9 @@ class _SectionHeader extends StatelessWidget {
       ),
       child: Text(
         title,
-        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-              color: AppColors.textSecondary,
-            ),
+        style: Theme.of(
+          context,
+        ).textTheme.titleSmall?.copyWith(color: AppColors.textSecondary),
       ),
     );
   }
@@ -958,10 +984,7 @@ class _LearningPreferencesSheetState extends State<_LearningPreferencesSheet> {
             const SizedBox(height: AppSpacing.l),
 
             // Audio settings
-            Text(
-              'Audio',
-              style: Theme.of(context).textTheme.titleSmall,
-            ),
+            Text('Audio', style: Theme.of(context).textTheme.titleSmall),
             SwitchListTile(
               title: const Text('Text-to-speech'),
               value: _ttsEnabled,
@@ -981,10 +1004,7 @@ class _LearningPreferencesSheetState extends State<_LearningPreferencesSheet> {
             const SizedBox(height: AppSpacing.m),
 
             // Quiz settings
-            Text(
-              'Quiz',
-              style: Theme.of(context).textTheme.titleSmall,
-            ),
+            Text('Quiz', style: Theme.of(context).textTheme.titleSmall),
             SwitchListTile(
               title: const Text('Enable timer'),
               value: _quizTimerEnabled,
@@ -1004,19 +1024,13 @@ class _LearningPreferencesSheetState extends State<_LearningPreferencesSheet> {
             const SizedBox(height: AppSpacing.m),
 
             // Practice settings
-            Text(
-              'Practice',
-              style: Theme.of(context).textTheme.titleSmall,
-            ),
+            Text('Practice', style: Theme.of(context).textTheme.titleSmall),
             ListTile(
               title: const Text('Cards per session'),
               trailing: DropdownButton<int>(
                 value: _cardsPerSession,
                 items: [10, 20, 50, 100]
-                    .map((n) => DropdownMenuItem(
-                          value: n,
-                          child: Text('$n'),
-                        ))
+                    .map((n) => DropdownMenuItem(value: n, child: Text('$n')))
                     .toList(),
                 onChanged: (value) async {
                   if (value != null) {

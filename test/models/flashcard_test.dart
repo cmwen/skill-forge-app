@@ -42,11 +42,7 @@ void main() {
     });
 
     test('Record easy review increases mastery', () {
-      final card = Flashcard.create(
-        deckId: 'deck-1',
-        front: 'Q',
-        back: 'A',
-      );
+      final card = Flashcard.create(deckId: 'deck-1', front: 'Q', back: 'A');
 
       final updated = card.recordReview(quality: 2); // Easy
 
@@ -71,11 +67,7 @@ void main() {
     });
 
     test('Multiple reviews increase interval exponentially', () {
-      var card = Flashcard.create(
-        deckId: 'deck-1',
-        front: 'Q',
-        back: 'A',
-      );
+      var card = Flashcard.create(deckId: 'deck-1', front: 'Q', back: 'A');
 
       card = card.recordReview(quality: 1); // Medium
       final firstInterval = card.intervalDays;
@@ -91,11 +83,7 @@ void main() {
     });
 
     test('Mastery level reaches 100 with perfect reviews', () {
-      var card = Flashcard.create(
-        deckId: 'deck-1',
-        front: 'Q',
-        back: 'A',
-      );
+      var card = Flashcard.create(deckId: 'deck-1', front: 'Q', back: 'A');
 
       // Do 20 perfect reviews
       for (int i = 0; i < 20; i++) {
@@ -106,13 +94,10 @@ void main() {
     });
 
     test('Card is due when nextReviewAt is in past', () {
-      final card = Flashcard.create(
-        deckId: 'deck-1',
-        front: 'Q',
-        back: 'A',
-      ).copyWith(
-        nextReviewAt: DateTime.now().subtract(const Duration(days: 1)),
-      );
+      final card = Flashcard.create(deckId: 'deck-1', front: 'Q', back: 'A')
+          .copyWith(
+            nextReviewAt: DateTime.now().subtract(const Duration(days: 1)),
+          );
 
       final now = DateTime.now();
       expect(card.nextReviewAt!.isBefore(now), true);
