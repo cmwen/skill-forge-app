@@ -60,7 +60,7 @@ class _GenerateScreenState extends State<GenerateScreen> {
     _initOllama();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<GoalsProvider>().loadGoals();
-      
+
       // Check if we received a goal ID as argument
       final args = ModalRoute.of(context)?.settings.arguments;
       if (args is String) {
@@ -101,7 +101,8 @@ class _GenerateScreenState extends State<GenerateScreen> {
     final goalsProvider = context.read<GoalsProvider>();
     final goal = goalsProvider.getGoalById(_selectedGoalId!);
 
-    final prompt = '''Generate $_itemCount $_contentType for learning about "${_topicController.text.trim()}" at $_difficulty level.
+    final prompt =
+        '''Generate $_itemCount $_contentType for learning about "${_topicController.text.trim()}" at $_difficulty level.
 
 Goal context: ${goal?.name ?? 'Learning'}
 ${_contextController.text.trim().isNotEmpty ? 'Additional context: ${_contextController.text.trim()}' : ''}
@@ -125,9 +126,9 @@ Use simple, clear language appropriate for $_difficulty level learners.''';
 
   void _copyPrompt() {
     Clipboard.setData(ClipboardData(text: _generatedPrompt));
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Prompt copied to clipboard')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Prompt copied to clipboard')));
   }
 
   /// Generate content directly using Ollama (new workflow)
@@ -135,7 +136,9 @@ Use simple, clear language appropriate for $_difficulty level learners.''';
     if (_ollamaService == null || !_ollamaAvailable) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Ollama is not available. Please check your Ollama server.'),
+          content: Text(
+            'Ollama is not available. Please check your Ollama server.',
+          ),
           backgroundColor: AppColors.error,
         ),
       );
@@ -224,7 +227,9 @@ Use simple, clear language appropriate for $_difficulty level learners.''';
         currentBack = null;
       } else if (trimmedLine.toLowerCase().startsWith('back:')) {
         currentBack = trimmedLine.substring(5).trim();
-      } else if (currentFront != null && currentBack == null && trimmedLine.isNotEmpty) {
+      } else if (currentFront != null &&
+          currentBack == null &&
+          trimmedLine.isNotEmpty) {
         // Continue front content
         currentFront = '$currentFront $trimmedLine';
       } else if (currentBack != null && trimmedLine.isNotEmpty) {
@@ -260,7 +265,10 @@ Use simple, clear language appropriate for $_difficulty level learners.''';
     });
   }
 
-  void _parseAlternativeFormat(String content, List<Map<String, String>> cards) {
+  void _parseAlternativeFormat(
+    String content,
+    List<Map<String, String>> cards,
+  ) {
     // Try parsing numbered format like "1. Term - Definition"
     final regex = RegExp(r'^\d+\.\s*(.+?)\s*[-:]\s*(.+)$', multiLine: true);
     final matches = regex.allMatches(content);
@@ -283,12 +291,12 @@ Use simple, clear language appropriate for $_difficulty level learners.''';
       final decksProvider = context.read<DecksProvider>();
       final goalsProvider = context.read<GoalsProvider>();
       final flashcardsProvider = context.read<FlashcardsProvider>();
-      
+
       final deck = await decksProvider.createDeck(
-            goalId: _selectedGoalId!,
-            name: _deckNameController.text.trim(),
-            source: 'AI Generated',
-          );
+        goalId: _selectedGoalId!,
+        name: _deckNameController.text.trim(),
+        source: 'AI Generated',
+      );
 
       // Load flashcards provider for this deck
       await flashcardsProvider.loadFlashcardsForDeck(deck.id);
@@ -330,9 +338,7 @@ Use simple, clear language appropriate for $_difficulty level learners.''';
             Text('Content Added!'),
           ],
         ),
-        content: Text(
-          '${_parsedCards.length} cards added to "${deck.name}"',
-        ),
+        content: Text('${_parsedCards.length} cards added to "${deck.name}"'),
         actions: [
           TextButton(
             onPressed: () {
@@ -347,10 +353,8 @@ Use simple, clear language appropriate for $_difficulty level learners.''';
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => DeckDetailScreen(
-                    deckId: deck.id,
-                    goalId: deck.goalId,
-                  ),
+                  builder: (context) =>
+                      DeckDetailScreen(deckId: deck.id, goalId: deck.goalId),
                 ),
               );
               _resetForm();
@@ -385,10 +389,7 @@ Use simple, clear language appropriate for $_difficulty level learners.''';
         title: const Text('Generate Content'),
         actions: [
           if (_currentStep > 0)
-            TextButton(
-              onPressed: _resetForm,
-              child: const Text('Start Over'),
-            ),
+            TextButton(onPressed: _resetForm, child: const Text('Start Over')),
         ],
       ),
       body: IndexedStack(
@@ -418,8 +419,11 @@ Use simple, clear language appropriate for $_difficulty level learners.''';
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.flag_outlined,
-                      size: 64, color: AppColors.textDisabled),
+                  const Icon(
+                    Icons.flag_outlined,
+                    size: 64,
+                    color: AppColors.textDisabled,
+                  ),
                   const SizedBox(height: AppSpacing.m),
                   Text(
                     'No Learning Goals Yet',
@@ -486,8 +490,9 @@ Use simple, clear language appropriate for $_difficulty level learners.''';
                               children: [
                                 Text(
                                   goal.name,
-                                  style:
-                                      Theme.of(context).textTheme.titleMedium,
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.titleMedium,
                                 ),
                                 Text(
                                   '${stats?.deckCount ?? 0} decks • ${stats?.cardCount ?? 0} cards',
@@ -648,10 +653,12 @@ Use simple, clear language appropriate for $_difficulty level learners.''';
                     ),
                   )
                 : const Icon(Icons.auto_awesome),
-            label: Text(_isGenerating ? 'Generating...' : 'Generate with Ollama'),
+            label: Text(
+              _isGenerating ? 'Generating...' : 'Generate with Ollama',
+            ),
           ),
           const SizedBox(height: AppSpacing.m),
-          
+
           // Show generation progress
           if (_isGenerating && _generationProgress.isNotEmpty)
             Container(
@@ -689,7 +696,7 @@ Use simple, clear language appropriate for $_difficulty level learners.''';
               ),
             ),
           const SizedBox(height: AppSpacing.m),
-          
+
           const Row(
             children: [
               Expanded(child: Divider()),
@@ -702,17 +709,17 @@ Use simple, clear language appropriate for $_difficulty level learners.''';
           ),
           const SizedBox(height: AppSpacing.m),
         ],
-        
+
         // Manual prompt generation (fallback)
         OutlinedButton(
           onPressed: _topicController.text.trim().isNotEmpty
               ? _generatePrompt
               : null,
-          child: Text(_ollamaAvailable 
-              ? 'Generate Manual Prompt' 
-              : 'Generate Prompt'),
+          child: Text(
+            _ollamaAvailable ? 'Generate Manual Prompt' : 'Generate Prompt',
+          ),
         ),
-        
+
         // Ollama status indicator
         if (!_ollamaAvailable && _ollamaService != null)
           Padding(
@@ -722,19 +729,20 @@ Use simple, clear language appropriate for $_difficulty level learners.''';
               decoration: BoxDecoration(
                 color: AppColors.warning.withValues(alpha: 0.1),
                 borderRadius: AppRadius.smallBorderRadius,
-                border: Border.all(color: AppColors.warning.withValues(alpha: 0.3)),
+                border: Border.all(
+                  color: AppColors.warning.withValues(alpha: 0.3),
+                ),
               ),
               child: Row(
                 children: [
-                  Icon(Icons.info_outline, 
-                      size: 16, color: AppColors.warning),
+                  Icon(Icons.info_outline, size: 16, color: AppColors.warning),
                   const SizedBox(width: AppSpacing.s),
                   Expanded(
                     child: Text(
                       'Ollama not available. Using manual workflow.',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: AppColors.warning,
-                          ),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodySmall?.copyWith(color: AppColors.warning),
                     ),
                   ),
                 ],
@@ -822,9 +830,7 @@ Use simple, clear language appropriate for $_difficulty level learners.''';
         const SizedBox(height: AppSpacing.m),
         TextField(
           controller: _pasteController,
-          decoration: const InputDecoration(
-            hintText: 'Paste content here...',
-          ),
+          decoration: const InputDecoration(hintText: 'Paste content here...'),
           maxLines: 12,
         ),
         const SizedBox(height: AppSpacing.m),
@@ -872,35 +878,35 @@ Use simple, clear language appropriate for $_difficulty level learners.''';
         const SizedBox(height: AppSpacing.l),
 
         // Preview cards (show first 3)
-        Text(
-          'Preview:',
-          style: Theme.of(context).textTheme.titleSmall,
-        ),
+        Text('Preview:', style: Theme.of(context).textTheme.titleSmall),
         const SizedBox(height: AppSpacing.s),
-        ..._parsedCards.take(3).map((card) => Padding(
-              padding: const EdgeInsets.only(bottom: AppSpacing.s),
-              child: Card(
-                child: Padding(
-                  padding: AppSpacing.cardPadding,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Front: ${card['front']}',
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                      const SizedBox(height: AppSpacing.xs),
-                      Text(
-                        'Back: ${card['back']}',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: AppColors.textSecondary,
-                            ),
-                      ),
-                    ],
+        ..._parsedCards
+            .take(3)
+            .map(
+              (card) => Padding(
+                padding: const EdgeInsets.only(bottom: AppSpacing.s),
+                child: Card(
+                  child: Padding(
+                    padding: AppSpacing.cardPadding,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Front: ${card['front']}',
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                        const SizedBox(height: AppSpacing.xs),
+                        Text(
+                          'Back: ${card['back']}',
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(color: AppColors.textSecondary),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            )),
+            ),
         if (_parsedCards.length > 3)
           Text(
             '... and ${_parsedCards.length - 3} more cards',
@@ -909,10 +915,7 @@ Use simple, clear language appropriate for $_difficulty level learners.''';
         const SizedBox(height: AppSpacing.l),
 
         // Save to
-        Text(
-          'Save to:',
-          style: Theme.of(context).textTheme.titleSmall,
-        ),
+        Text('Save to:', style: Theme.of(context).textTheme.titleSmall),
         const SizedBox(height: AppSpacing.s),
         Container(
           padding: const EdgeInsets.all(AppSpacing.m),
@@ -935,9 +938,7 @@ Use simple, clear language appropriate for $_difficulty level learners.''';
         const SizedBox(height: AppSpacing.s),
         TextField(
           controller: _deckNameController,
-          decoration: const InputDecoration(
-            hintText: 'Enter deck name',
-          ),
+          decoration: const InputDecoration(hintText: 'Enter deck name'),
         ),
         const SizedBox(height: AppSpacing.l),
 

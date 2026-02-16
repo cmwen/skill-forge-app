@@ -53,17 +53,17 @@ class _FlashcardStudyScreenState extends State<FlashcardStudyScreen> {
 
   void _startSession() {
     context.read<StudyProvider>().startSession(
-          goalId: widget.goalId,
-          deckId: widget.deckId,
-          sessionType: StudySessionType.flashcards,
-        );
+      goalId: widget.goalId,
+      deckId: widget.deckId,
+      sessionType: StudySessionType.flashcards,
+    );
   }
 
   void _flipCard() {
     setState(() {
       _showingFront = !_showingFront;
     });
-    
+
     // Speak the revealed side if TTS auto-play is enabled
     if (!_showingFront) {
       final prefs = context.read<PreferencesService>();
@@ -83,7 +83,7 @@ class _FlashcardStudyScreenState extends State<FlashcardStudyScreen> {
     // Record in provider
     final flashcardsProvider = context.read<FlashcardsProvider>();
     final studyProvider = context.read<StudyProvider>();
-    
+
     await flashcardsProvider.recordReview(card.id, quality);
 
     // Track in study session
@@ -107,35 +107,35 @@ class _FlashcardStudyScreenState extends State<FlashcardStudyScreen> {
 
   Future<void> _endSession() async {
     if (!mounted) return;
-    
+
     await context.read<StudyProvider>().endSession();
 
     if (!mounted) return;
-    
+
     // Refresh stats
     await context.read<DecksProvider>().refreshDeckStats(widget.deckId);
-    
+
     if (!mounted) return;
-    
+
     await context.read<GoalsProvider>().refreshGoalStats(widget.goalId);
 
     if (!mounted) return;
-    
+
     // Refresh flashcards to reflect updated mastery levels
     await context.read<FlashcardsProvider>().refresh();
-    
+
     if (!mounted) return;
-    
+
     // Refresh overall stats for the progress screen
     await context.read<StudyProvider>().refreshOverallStats();
 
     if (!mounted) return;
-    
+
     // Mark deck as studied
     await context.read<DecksProvider>().markDeckStudied(widget.deckId);
-    
+
     if (!mounted) return;
-    
+
     await context.read<GoalsProvider>().markGoalStudied(widget.goalId);
   }
 
@@ -174,9 +174,7 @@ class _FlashcardStudyScreenState extends State<FlashcardStudyScreen> {
     if (_cards.isEmpty) {
       return Scaffold(
         appBar: AppBar(title: const Text('Study')),
-        body: EmptyStates.allCaughtUp(
-          onPractice: () => Navigator.pop(context),
-        ),
+        body: EmptyStates.allCaughtUp(onPractice: () => Navigator.pop(context)),
       );
     }
 
@@ -225,21 +223,27 @@ class _FlashcardStudyScreenState extends State<FlashcardStudyScreen> {
                   ),
                 ),
                 const SizedBox(height: AppSpacing.m),
-                
+
                 // TTS button
                 Consumer2<PreferencesService, TtsService>(
                   builder: (context, prefs, tts, _) {
                     if (!prefs.isTtsEnabled()) return const SizedBox.shrink();
-                    
+
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         IconButton.filledTonal(
                           onPressed: () {
-                            final text = _showingFront ? currentCard.front : currentCard.back;
+                            final text = _showingFront
+                                ? currentCard.front
+                                : currentCard.back;
                             tts.speak(text);
                           },
-                          icon: Icon(tts.isSpeaking ? Icons.volume_up : Icons.volume_up_outlined),
+                          icon: Icon(
+                            tts.isSpeaking
+                                ? Icons.volume_up
+                                : Icons.volume_up_outlined,
+                          ),
                           tooltip: 'Speak',
                         ),
                       ],
@@ -250,9 +254,7 @@ class _FlashcardStudyScreenState extends State<FlashcardStudyScreen> {
 
                 // Rating buttons (show only when card is flipped)
                 if (!_showingFront)
-                  ReviewRatingButtons(
-                    onRating: _rateCard,
-                  )
+                  ReviewRatingButtons(onRating: _rateCard)
                 else
                   const SizedBox(
                     height: 80,
@@ -287,11 +289,7 @@ class _FlashcardStudyScreenState extends State<FlashcardStudyScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(
-                Icons.celebration,
-                size: 64,
-                color: AppColors.success,
-              ),
+              const Icon(Icons.celebration, size: 64, color: AppColors.success),
               const SizedBox(height: AppSpacing.l),
               Text(
                 'Great Work!',
@@ -320,8 +318,8 @@ class _FlashcardStudyScreenState extends State<FlashcardStudyScreen> {
                         valueColor: accuracy >= 80
                             ? AppColors.success
                             : accuracy >= 60
-                                ? AppColors.warning
-                                : AppColors.error,
+                            ? AppColors.warning
+                            : AppColors.error,
                       ),
                     ],
                   ),
@@ -386,9 +384,9 @@ class _SummaryRow extends StatelessWidget {
           Text(
             value,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  color: valueColor,
-                  fontWeight: FontWeight.bold,
-                ),
+              color: valueColor,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ],
       ),

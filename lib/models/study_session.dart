@@ -1,10 +1,7 @@
 import 'package:uuid/uuid.dart';
 
 /// Type of study session
-enum StudySessionType {
-  flashcards,
-  quiz,
-}
+enum StudySessionType { flashcards, quiz }
 
 /// Represents a completed study session.
 ///
@@ -65,10 +62,10 @@ class StudySession {
     required int correctAnswers,
   }) {
     final durationSeconds = endedAt.difference(startedAt).inSeconds;
-    final avgTimePerCard = cardsReviewed > 0 
-        ? durationSeconds / cardsReviewed 
+    final avgTimePerCard = cardsReviewed > 0
+        ? durationSeconds / cardsReviewed
         : 0.0;
-    
+
     return StudySession(
       id: const Uuid().v4(),
       goalId: goalId,
@@ -127,11 +124,14 @@ class StudySession {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is StudySession && runtimeType == other.runtimeType && id == other.id;
+      other is StudySession &&
+          runtimeType == other.runtimeType &&
+          id == other.id;
 
   @override
   int get hashCode => id.hashCode;
 
   @override
-  String toString() => 'StudySession(id: $id, cards: $cardsReviewed, accuracy: ${accuracy.toStringAsFixed(1)}%)';
+  String toString() =>
+      'StudySession(id: $id, cards: $cardsReviewed, accuracy: ${accuracy.toStringAsFixed(1)}%)';
 }

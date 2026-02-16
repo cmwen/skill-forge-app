@@ -47,12 +47,12 @@ void main() async {
       providers: [
         // Navigation
         ChangeNotifierProvider(create: (_) => NavigationProvider()),
-        
+
         // Services
         Provider<PreferencesService>.value(value: prefsService),
         Provider<TtsService>.value(value: ttsService),
         Provider<ExportImportService>.value(value: exportImportService),
-        
+
         // State providers
         ChangeNotifierProvider(create: (_) => GoalsProvider(dbHelper)),
         ChangeNotifierProvider(create: (_) => DecksProvider(dbHelper)),

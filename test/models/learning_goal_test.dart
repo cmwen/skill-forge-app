@@ -25,10 +25,7 @@ void main() {
     });
 
     test('Create learning goal with factory constructor', () {
-      final goal = LearningGoal.create(
-        name: 'Learn Dart',
-        icon: '🎯',
-      );
+      final goal = LearningGoal.create(name: 'Learn Dart', icon: '🎯');
 
       expect(goal.id, isNotEmpty);
       expect(goal.name, 'Learn Dart');
@@ -86,10 +83,7 @@ void main() {
     });
 
     test('copyWith creates modified copy', () {
-      final original = LearningGoal.create(
-        name: 'Original',
-        icon: '🎯',
-      );
+      final original = LearningGoal.create(name: 'Original', icon: '🎯');
 
       final modified = original.copyWith(
         name: 'Modified',
