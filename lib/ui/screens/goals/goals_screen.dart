@@ -33,18 +33,14 @@ class _GoalsScreenState extends State<GoalsScreen> {
   }
 
   void _navigateToCreateGoal() {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => const CreateGoalScreen(),
-      ),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (context) => const CreateGoalScreen()));
   }
 
   void _navigateToGoalDetail(String goalId) {
     Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => GoalDetailScreen(goalId: goalId),
-      ),
+      MaterialPageRoute(builder: (context) => GoalDetailScreen(goalId: goalId)),
     );
   }
 
@@ -97,8 +93,10 @@ class _GoalsScreenState extends State<GoalsScreen> {
             ),
             ListTile(
               leading: const Icon(Icons.delete_outline, color: AppColors.error),
-              title: const Text('Delete Goal',
-                  style: TextStyle(color: AppColors.error)),
+              title: const Text(
+                'Delete Goal',
+                style: TextStyle(color: AppColors.error),
+              ),
               onTap: () {
                 Navigator.pop(context);
                 _confirmDeleteGoal(goalId);
@@ -128,9 +126,7 @@ class _GoalsScreenState extends State<GoalsScreen> {
               Navigator.pop(context);
               context.read<GoalsProvider>().deleteGoal(goalId);
             },
-            style: FilledButton.styleFrom(
-              backgroundColor: AppColors.error,
-            ),
+            style: FilledButton.styleFrom(backgroundColor: AppColors.error),
             child: const Text('Delete'),
           ),
         ],
@@ -151,9 +147,9 @@ class _GoalsScreenState extends State<GoalsScreen> {
 
       if (mounted) {
         Navigator.pop(context); // Close loading
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Export complete')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Export complete')));
       }
     } catch (e) {
       if (mounted) {
@@ -178,9 +174,7 @@ class _GoalsScreenState extends State<GoalsScreen> {
             icon: const Icon(Icons.search),
             onPressed: () {
               Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const SearchScreen(),
-                ),
+                MaterialPageRoute(builder: (context) => const SearchScreen()),
               );
             },
           ),
@@ -197,8 +191,11 @@ class _GoalsScreenState extends State<GoalsScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.error_outline,
-                      size: 48, color: AppColors.error),
+                  const Icon(
+                    Icons.error_outline,
+                    size: 48,
+                    color: AppColors.error,
+                  ),
                   const SizedBox(height: AppSpacing.m),
                   Text(provider.error!),
                   const SizedBox(height: AppSpacing.m),
@@ -227,8 +224,8 @@ class _GoalsScreenState extends State<GoalsScreen> {
                   Text(
                     'Active Goals',
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          color: AppColors.textSecondary,
-                        ),
+                      color: AppColors.textSecondary,
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.s),
                 ],
@@ -265,12 +262,8 @@ class _GoalsScreenState extends State<GoalsScreen> {
                         children: [
                           Text(
                             'Completed Goals (${provider.archivedGoals.length})',
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleSmall
-                                ?.copyWith(
-                                  color: AppColors.textSecondary,
-                                ),
+                            style: Theme.of(context).textTheme.titleSmall
+                                ?.copyWith(color: AppColors.textSecondary),
                           ),
                           const SizedBox(width: AppSpacing.xs),
                           Icon(

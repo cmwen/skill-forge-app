@@ -9,15 +9,15 @@ class OllamaGenerationService {
   OllamaGenerationService({
     OllamaClient? client,
     OllamaConfigService? configService,
-  })  : _client = client,
-        _configService = configService ?? OllamaConfigService();
+  }) : _client = client,
+       _configService = configService ?? OllamaConfigService();
 
   /// Initialize the service with saved configuration
   Future<void> init() async {
     // Get configured settings
     final baseUrl = await _configService.getBaseUrl();
     final timeoutSeconds = await _configService.getTimeout();
-    
+
     // Initialize client with configured values
     _client = OllamaClient(
       baseUrl: baseUrl,
@@ -67,7 +67,8 @@ class OllamaGenerationService {
     }
 
     // Get model from config or use provided one
-    final selectedModel = model ??
+    final selectedModel =
+        model ??
         await _configService.getLastUsedModel() ??
         await _configService.getDefaultModel() ??
         'llama3.2';
@@ -84,10 +85,12 @@ class OllamaGenerationService {
 
     // Prepare messages
     final messages = [
-      OllamaMessage.system('''You are an expert educational content creator. 
+      OllamaMessage.system(
+        '''You are an expert educational content creator. 
 Generate flashcards in a clear, structured format.
 Always respond with the exact format requested.
-Do not include any explanations or additional text outside the flashcard format.'''),
+Do not include any explanations or additional text outside the flashcard format.''',
+      ),
       OllamaMessage.user(prompt),
     ];
 
@@ -132,7 +135,8 @@ Do not include any explanations or additional text outside the flashcard format.
     }
 
     // Get model from config or use provided one
-    final selectedModel = model ??
+    final selectedModel =
+        model ??
         await _configService.getLastUsedModel() ??
         await _configService.getDefaultModel() ??
         'llama3.2';
@@ -149,10 +153,12 @@ Do not include any explanations or additional text outside the flashcard format.
 
     // Prepare messages
     final messages = [
-      OllamaMessage.system('''You are an expert educational content creator. 
+      OllamaMessage.system(
+        '''You are an expert educational content creator. 
 Generate flashcards in a clear, structured format.
 Always respond with the exact format requested.
-Do not include any explanations or additional text outside the flashcard format.'''),
+Do not include any explanations or additional text outside the flashcard format.''',
+      ),
       OllamaMessage.user(prompt),
     ];
 
@@ -184,7 +190,8 @@ Do not include any explanations or additional text outside the flashcard format.
     final buffer = StringBuffer();
 
     buffer.writeln(
-        'Generate $count $contentType for learning about "$topic" at $difficulty level.');
+      'Generate $count $contentType for learning about "$topic" at $difficulty level.',
+    );
     buffer.writeln();
 
     if (goalContext != null) {
@@ -204,9 +211,12 @@ Do not include any explanations or additional text outside the flashcard format.
     buffer.writeln('- Provide exactly $count items');
     buffer.writeln('- Each item must be clearly separated');
     buffer.writeln(
-        '- Use simple, clear language appropriate for $difficulty level learners');
+      '- Use simple, clear language appropriate for $difficulty level learners',
+    );
     buffer.writeln('- Do not include item numbers or extra formatting');
-    buffer.writeln('- Do not include any explanations before or after the items');
+    buffer.writeln(
+      '- Do not include any explanations before or after the items',
+    );
 
     return buffer.toString();
   }

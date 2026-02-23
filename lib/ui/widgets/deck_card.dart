@@ -82,9 +82,9 @@ class DeckCard extends StatelessWidget {
               // Last studied
               Text(
                 _formatLastStudied(lastStudiedAt),
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppColors.textDisabled,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: AppColors.textDisabled),
               ),
               const SizedBox(height: AppSpacing.m),
 

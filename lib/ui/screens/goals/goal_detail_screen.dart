@@ -31,10 +31,8 @@ class _GoalDetailScreenState extends State<GoalDetailScreen> {
   void _navigateToDeckDetail(String deckId) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => DeckDetailScreen(
-          deckId: deckId,
-          goalId: widget.goalId,
-        ),
+        builder: (context) =>
+            DeckDetailScreen(deckId: deckId, goalId: widget.goalId),
       ),
     );
   }
@@ -80,10 +78,11 @@ class _GoalDetailScreenState extends State<GoalDetailScreen> {
               },
             ),
             ListTile(
-              leading:
-                  const Icon(Icons.delete_outline, color: AppColors.error),
-              title: const Text('Delete Deck',
-                  style: TextStyle(color: AppColors.error)),
+              leading: const Icon(Icons.delete_outline, color: AppColors.error),
+              title: const Text(
+                'Delete Deck',
+                style: TextStyle(color: AppColors.error),
+              ),
               onTap: () {
                 Navigator.pop(context);
                 _confirmDeleteDeck(deckId);
@@ -104,9 +103,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen> {
         content: TextField(
           controller: controller,
           autofocus: true,
-          decoration: const InputDecoration(
-            hintText: 'Deck name',
-          ),
+          decoration: const InputDecoration(hintText: 'Deck name'),
         ),
         actions: [
           TextButton(
@@ -188,7 +185,8 @@ class _GoalDetailScreenState extends State<GoalDetailScreen> {
                 Navigator.pop(context);
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => GoalStatsScreen(goalId: widget.goalId),
+                    builder: (context) =>
+                        GoalStatsScreen(goalId: widget.goalId),
                   ),
                 );
               },
@@ -211,10 +209,11 @@ class _GoalDetailScreenState extends State<GoalDetailScreen> {
               },
             ),
             ListTile(
-              leading:
-                  const Icon(Icons.delete_outline, color: AppColors.error),
-              title: const Text('Delete Goal',
-                  style: TextStyle(color: AppColors.error)),
+              leading: const Icon(Icons.delete_outline, color: AppColors.error),
+              title: const Text(
+                'Delete Goal',
+                style: TextStyle(color: AppColors.error),
+              ),
               onTap: () {
                 Navigator.pop(context);
                 _confirmDeleteGoal();
@@ -303,16 +302,13 @@ class _GoalDetailScreenState extends State<GoalDetailScreen> {
         builder: (context) => const Center(child: CircularProgressIndicator()),
       );
 
-      await exportService.exportDeckAndShare(
-        deckId: deckId,
-        format: format,
-      );
+      await exportService.exportDeckAndShare(deckId: deckId, format: format);
 
       if (mounted) {
         Navigator.pop(context); // Close loading
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Export complete')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Export complete')));
       }
     } catch (e) {
       if (mounted) {
@@ -340,9 +336,9 @@ class _GoalDetailScreenState extends State<GoalDetailScreen> {
 
       if (mounted) {
         Navigator.pop(context); // Close loading
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Export complete')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Export complete')));
       }
     } catch (e) {
       if (mounted) {
@@ -382,12 +378,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen> {
           children: [
             Text(goal.icon),
             const SizedBox(width: AppSpacing.s),
-            Flexible(
-              child: Text(
-                goal.name,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
+            Flexible(child: Text(goal.name, overflow: TextOverflow.ellipsis)),
           ],
         ),
         actions: [
@@ -408,8 +399,8 @@ class _GoalDetailScreenState extends State<GoalDetailScreen> {
                 Text(
                   'Progress',
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        color: AppColors.textSecondary,
-                      ),
+                    color: AppColors.textSecondary,
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.s),
                 Row(
@@ -433,8 +424,8 @@ class _GoalDetailScreenState extends State<GoalDetailScreen> {
                     Text(
                       '${(progressPercent * 100).toInt()}%',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ],
                 ),
@@ -453,60 +444,55 @@ class _GoalDetailScreenState extends State<GoalDetailScreen> {
             child: decksProvider.isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : decksProvider.decks.isEmpty
-                    ? EmptyStates.noDecks(
-                        onGenerate: _navigateToGenerateContent,
-                        onCreate: _navigateToCreateDeck,
-                      )
-                    : RefreshIndicator(
-                        onRefresh: () =>
-                            decksProvider.loadDecksForGoal(widget.goalId),
-                        child: ListView(
-                          padding: AppSpacing.screenPadding,
-                          children: [
-                            Text(
-                              'Decks in this goal',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleSmall
-                                  ?.copyWith(
-                                    color: AppColors.textSecondary,
-                                  ),
-                            ),
-                            const SizedBox(height: AppSpacing.s),
-                            ...decksProvider.decks.map((deck) {
-                              final stats =
-                                  decksProvider.getStatsForDeck(deck.id);
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.only(bottom: AppSpacing.s),
-                                child: DeckCard(
-                                  name: deck.name,
-                                  cardCount: stats?.cardCount ?? 0,
-                                  masteredCount: stats?.masteredCount ?? 0,
-                                  lastStudiedAt: deck.lastStudiedAt,
-                                  onTap: () => _navigateToDeckDetail(deck.id),
-                                  onPractice: () =>
-                                      _navigateToDeckDetail(deck.id),
-                                  onLongPress: () => _showDeckOptions(deck.id),
-                                ),
-                              );
-                            }),
-                            const SizedBox(height: AppSpacing.m),
-                            OutlinedButton.icon(
-                              onPressed: _navigateToCreateDeck,
-                              icon: const Icon(Icons.add),
-                              label: const Text('Add New Deck'),
-                            ),
-                            const SizedBox(height: AppSpacing.s),
-                            FilledButton.icon(
-                              onPressed: _navigateToGenerateContent,
-                              icon: const Icon(Icons.auto_awesome),
-                              label: const Text('Generate Content with AI'),
-                            ),
-                            const SizedBox(height: AppSpacing.xxl),
-                          ],
+                ? EmptyStates.noDecks(
+                    onGenerate: _navigateToGenerateContent,
+                    onCreate: _navigateToCreateDeck,
+                  )
+                : RefreshIndicator(
+                    onRefresh: () =>
+                        decksProvider.loadDecksForGoal(widget.goalId),
+                    child: ListView(
+                      padding: AppSpacing.screenPadding,
+                      children: [
+                        Text(
+                          'Decks in this goal',
+                          style: Theme.of(context).textTheme.titleSmall
+                              ?.copyWith(color: AppColors.textSecondary),
                         ),
-                      ),
+                        const SizedBox(height: AppSpacing.s),
+                        ...decksProvider.decks.map((deck) {
+                          final stats = decksProvider.getStatsForDeck(deck.id);
+                          return Padding(
+                            padding: const EdgeInsets.only(
+                              bottom: AppSpacing.s,
+                            ),
+                            child: DeckCard(
+                              name: deck.name,
+                              cardCount: stats?.cardCount ?? 0,
+                              masteredCount: stats?.masteredCount ?? 0,
+                              lastStudiedAt: deck.lastStudiedAt,
+                              onTap: () => _navigateToDeckDetail(deck.id),
+                              onPractice: () => _navigateToDeckDetail(deck.id),
+                              onLongPress: () => _showDeckOptions(deck.id),
+                            ),
+                          );
+                        }),
+                        const SizedBox(height: AppSpacing.m),
+                        OutlinedButton.icon(
+                          onPressed: _navigateToCreateDeck,
+                          icon: const Icon(Icons.add),
+                          label: const Text('Add New Deck'),
+                        ),
+                        const SizedBox(height: AppSpacing.s),
+                        FilledButton.icon(
+                          onPressed: _navigateToGenerateContent,
+                          icon: const Icon(Icons.auto_awesome),
+                          label: const Text('Generate Content with AI'),
+                        ),
+                        const SizedBox(height: AppSpacing.xxl),
+                      ],
+                    ),
+                  ),
           ),
         ],
       ),

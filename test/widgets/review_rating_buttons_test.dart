@@ -9,11 +9,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           theme: AppTheme.darkTheme,
-          home: Scaffold(
-            body: ReviewRatingButtons(
-              onRating: (rating) {},
-            ),
-          ),
+          home: Scaffold(body: ReviewRatingButtons(onRating: (rating) {})),
         ),
       );
 
@@ -86,11 +82,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           theme: AppTheme.darkTheme,
-          home: Scaffold(
-            body: ReviewRatingButtons(
-              onRating: (rating) {},
-            ),
-          ),
+          home: Scaffold(body: ReviewRatingButtons(onRating: (rating) {})),
         ),
       );
 
@@ -105,9 +97,7 @@ void main() {
         MaterialApp(
           theme: AppTheme.darkTheme,
           home: Scaffold(
-            body: ReviewRatingButtons(
-              onRating: (rating) => tapCount++,
-            ),
+            body: ReviewRatingButtons(onRating: (rating) => tapCount++),
           ),
         ),
       );

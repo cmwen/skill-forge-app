@@ -25,13 +25,13 @@ class GoalsProvider extends ChangeNotifier {
 
   /// List of active (non-archived) learning goals
   List<LearningGoal> _goals = [];
-  
+
   /// List of archived learning goals
   List<LearningGoal> _archivedGoals = [];
-  
+
   /// Whether goals are currently loading
   bool _isLoading = false;
-  
+
   /// Error message if something went wrong
   String? _error;
 
@@ -46,13 +46,13 @@ class GoalsProvider extends ChangeNotifier {
 
   /// Active learning goals
   List<LearningGoal> get goals => List.unmodifiable(_goals);
-  
+
   /// Archived learning goals
   List<LearningGoal> get archivedGoals => List.unmodifiable(_archivedGoals);
-  
+
   /// Whether goals are loading
   bool get isLoading => _isLoading;
-  
+
   /// Error message
   String? get error => _error;
 
@@ -73,10 +73,10 @@ class GoalsProvider extends ChangeNotifier {
       _goals = await _db.getAllGoals(includeArchived: false);
       _archivedGoals = await _db.getAllGoals(includeArchived: true);
       _archivedGoals = _archivedGoals.where((g) => g.isArchived).toList();
-      
+
       // Load stats for each goal
       await _loadGoalStats();
-      
+
       _isLoading = false;
       notifyListeners();
     } catch (e) {
@@ -94,7 +94,7 @@ class GoalsProvider extends ChangeNotifier {
       final cardCount = await _db.getCardCountForGoal(goal.id);
       final masteredCount = await _db.getMasteredCardCountForGoal(goal.id);
       final totalStudyTime = await _db.getTotalStudyTimeForGoal(goal.id);
-      
+
       _goalStats[goal.id] = GoalStats(
         deckCount: deckCount,
         cardCount: cardCount,
@@ -110,7 +110,7 @@ class GoalsProvider extends ChangeNotifier {
     final cardCount = await _db.getCardCountForGoal(goalId);
     final masteredCount = await _db.getMasteredCardCountForGoal(goalId);
     final totalStudyTime = await _db.getTotalStudyTimeForGoal(goalId);
-    
+
     _goalStats[goalId] = GoalStats(
       deckCount: deckCount,
       cardCount: cardCount,
@@ -137,7 +137,7 @@ class GoalsProvider extends ChangeNotifier {
       icon: icon,
       targetDate: targetDate,
     );
-    
+
     await _db.insertGoal(goal);
     _goals.insert(0, goal);
     _goalStats[goal.id] = const GoalStats(
@@ -147,7 +147,7 @@ class GoalsProvider extends ChangeNotifier {
       totalStudyTimeSeconds: 0,
     );
     notifyListeners();
-    
+
     return goal;
   }
 
@@ -155,7 +155,7 @@ class GoalsProvider extends ChangeNotifier {
   Future<void> updateGoal(LearningGoal goal) async {
     final updatedGoal = goal.copyWith(updatedAt: DateTime.now());
     await _db.updateGoal(updatedGoal);
-    
+
     final index = _goals.indexWhere((g) => g.id == goal.id);
     if (index >= 0) {
       _goals[index] = updatedGoal;
@@ -165,7 +165,7 @@ class GoalsProvider extends ChangeNotifier {
         _archivedGoals[archivedIndex] = updatedGoal;
       }
     }
-    
+
     notifyListeners();
   }
 
@@ -173,12 +173,12 @@ class GoalsProvider extends ChangeNotifier {
   Future<void> archiveGoal(String goalId) async {
     final index = _goals.indexWhere((g) => g.id == goalId);
     if (index < 0) return;
-    
+
     final goal = _goals[index];
     final archivedGoal = goal.copyWith(isArchived: true);
-    
+
     await _db.updateGoal(archivedGoal);
-    
+
     _goals.removeAt(index);
     _archivedGoals.insert(0, archivedGoal);
     notifyListeners();
@@ -188,12 +188,12 @@ class GoalsProvider extends ChangeNotifier {
   Future<void> unarchiveGoal(String goalId) async {
     final index = _archivedGoals.indexWhere((g) => g.id == goalId);
     if (index < 0) return;
-    
+
     final goal = _archivedGoals[index];
     final unarchivedGoal = goal.copyWith(isArchived: false);
-    
+
     await _db.updateGoal(unarchivedGoal);
-    
+
     _archivedGoals.removeAt(index);
     _goals.insert(0, unarchivedGoal);
     notifyListeners();
@@ -202,7 +202,7 @@ class GoalsProvider extends ChangeNotifier {
   /// Delete a learning goal permanently
   Future<void> deleteGoal(String goalId) async {
     await _db.deleteGoal(goalId);
-    
+
     _goals.removeWhere((g) => g.id == goalId);
     _archivedGoals.removeWhere((g) => g.id == goalId);
     _goalStats.remove(goalId);
@@ -213,10 +213,10 @@ class GoalsProvider extends ChangeNotifier {
   Future<void> markGoalStudied(String goalId) async {
     final index = _goals.indexWhere((g) => g.id == goalId);
     if (index < 0) return;
-    
+
     final goal = _goals[index];
     final updatedGoal = goal.copyWith(lastStudiedAt: DateTime.now());
-    
+
     await _db.updateGoal(updatedGoal);
     _goals[index] = updatedGoal;
     notifyListeners();
