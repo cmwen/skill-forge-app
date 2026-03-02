@@ -103,11 +103,7 @@ void main() {
     });
 
     test('Accumulate study time', () {
-      var deck = Deck.create(
-        goalId: 'goal-1',
-        name: 'Test',
-        source: 'Manual',
-      );
+      var deck = Deck.create(goalId: 'goal-1', name: 'Test', source: 'Manual');
 
       expect(deck.totalStudyTimeSeconds, 0);
 
@@ -116,7 +112,9 @@ void main() {
       expect(deck.totalStudyTimeSeconds, 600);
 
       // Add another 5 minutes
-      deck = deck.copyWith(totalStudyTimeSeconds: deck.totalStudyTimeSeconds + 300);
+      deck = deck.copyWith(
+        totalStudyTimeSeconds: deck.totalStudyTimeSeconds + 300,
+      );
       expect(deck.totalStudyTimeSeconds, 900);
     });
 

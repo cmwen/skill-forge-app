@@ -101,17 +101,13 @@ class _SearchScreenState extends State<SearchScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.search,
-            size: 64,
-            color: AppColors.textSecondary,
-          ),
+          Icon(Icons.search, size: 64, color: AppColors.textSecondary),
           const SizedBox(height: AppSpacing.m),
           Text(
             'Start typing to search',
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: AppColors.textSecondary,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
           ),
         ],
       ),
@@ -129,13 +125,15 @@ class _SearchScreenState extends State<SearchScreen> {
       for (final goal in goalsProvider.goals) {
         if (goal.name.toLowerCase().contains(query) ||
             (goal.description?.toLowerCase().contains(query) ?? false)) {
-          results.add(_SearchResult(
-            type: 'goal',
-            title: goal.name,
-            subtitle: goal.description ?? 'Learning Goal',
-            icon: goal.icon,
-            goalId: goal.id,
-          ));
+          results.add(
+            _SearchResult(
+              type: 'goal',
+              title: goal.name,
+              subtitle: goal.description ?? 'Learning Goal',
+              icon: goal.icon,
+              goalId: goal.id,
+            ),
+          );
         }
       }
     }
@@ -148,24 +146,20 @@ class _SearchScreenState extends State<SearchScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.search_off,
-              size: 64,
-              color: AppColors.textSecondary,
-            ),
+            Icon(Icons.search_off, size: 64, color: AppColors.textSecondary),
             const SizedBox(height: AppSpacing.m),
             Text(
               'No results for "$_searchQuery"',
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: AppColors.textSecondary,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
             ),
             const SizedBox(height: AppSpacing.s),
             Text(
               'Try a different search term',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: AppColors.textSecondary,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary),
             ),
           ],
         ),
@@ -246,10 +240,7 @@ class _SearchResultTile extends StatelessWidget {
   final _SearchResult result;
   final VoidCallback onTap;
 
-  const _SearchResultTile({
-    required this.result,
-    required this.onTap,
-  });
+  const _SearchResultTile({required this.result, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -290,9 +281,9 @@ class _SearchResultTile extends StatelessWidget {
       child: Text(
         result.type.toUpperCase(),
         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: AppColors.textSecondary,
-              fontSize: 10,
-            ),
+          color: AppColors.textSecondary,
+          fontSize: 10,
+        ),
       ),
     );
   }

@@ -8,9 +8,7 @@ class UserGuideScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('User Guide'),
-      ),
+      appBar: AppBar(title: const Text('User Guide')),
       body: ListView(
         padding: AppSpacing.screenPadding,
         children: const [
@@ -170,18 +168,15 @@ class _GuideSection extends StatelessWidget {
               children: [
                 Icon(icon, color: AppColors.primary),
                 const SizedBox(width: AppSpacing.s),
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
+                Text(title, style: Theme.of(context).textTheme.titleMedium),
               ],
             ),
             const SizedBox(height: AppSpacing.m),
             Text(
               content.trim(),
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    height: 1.5,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(height: 1.5),
             ),
           ],
         ),

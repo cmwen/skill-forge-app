@@ -31,14 +31,15 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           theme: AppTheme.darkTheme,
-          home: Scaffold(
-            body: EmptyStates.noGoals(onCreate: () {}),
-          ),
+          home: Scaffold(body: EmptyStates.noGoals(onCreate: () {})),
         ),
       );
 
       expect(find.text('Welcome to Skill Forge!'), findsOneWidget);
-      expect(find.textContaining('Create your first learning goal'), findsOneWidget);
+      expect(
+        find.textContaining('Create your first learning goal'),
+        findsOneWidget,
+      );
       expect(find.text('Create Your First Goal'), findsOneWidget);
     });
 
@@ -62,9 +63,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           theme: AppTheme.darkTheme,
-          home: Scaffold(
-            body: EmptyStates.noCards(onAdd: () {}),
-          ),
+          home: Scaffold(body: EmptyStates.noCards(onAdd: () {})),
         ),
       );
 
@@ -79,9 +78,7 @@ void main() {
         MaterialApp(
           theme: AppTheme.darkTheme,
           home: Scaffold(
-            body: EmptyStates.noGoals(
-              onCreate: () => actionTriggered = true,
-            ),
+            body: EmptyStates.noGoals(onCreate: () => actionTriggered = true),
           ),
         ),
       );
@@ -134,9 +131,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           theme: AppTheme.darkTheme,
-          home: Scaffold(
-            body: EmptyStates.allCaughtUp(onPractice: () {}),
-          ),
+          home: Scaffold(body: EmptyStates.allCaughtUp(onPractice: () {})),
         ),
       );
 
@@ -149,9 +144,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           theme: AppTheme.darkTheme,
-          home: Scaffold(
-            body: EmptyStates.noSearchResults(onClear: () {}),
-          ),
+          home: Scaffold(body: EmptyStates.noSearchResults(onClear: () {})),
         ),
       );
 
@@ -160,4 +153,3 @@ void main() {
     });
   });
 }
-

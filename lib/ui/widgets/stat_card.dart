@@ -35,26 +35,22 @@ class StatCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (icon != null) ...[
-            Icon(
-              icon,
-              size: 20,
-              color: AppColors.textSecondary,
-            ),
+            Icon(icon, size: 20, color: AppColors.textSecondary),
             const SizedBox(height: AppSpacing.xs),
           ],
           Text(
             value,
             style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  color: valueColor ?? AppColors.textPrimary,
-                  fontWeight: FontWeight.bold,
-                ),
+              color: valueColor ?? AppColors.textPrimary,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const SizedBox(height: AppSpacing.xs),
           Text(
             label,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: AppColors.textSecondary,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: AppColors.textSecondary),
           ),
         ],
       ),
@@ -73,10 +69,7 @@ class StatsRow extends StatelessWidget {
     return Row(
       children: stats
           .map((stat) => Expanded(child: stat))
-          .expand((widget) => [
-                widget,
-                const SizedBox(width: AppSpacing.s),
-              ])
+          .expand((widget) => [widget, const SizedBox(width: AppSpacing.s)])
           .take(stats.length * 2 - 1)
           .toList(),
     );
@@ -167,14 +160,14 @@ class GoalProgressCard extends StatelessWidget {
                   Text(
                     cardsProgress,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppColors.textSecondary,
-                        ),
+                      color: AppColors.textSecondary,
+                    ),
                   ),
                   Text(
                     studyTime,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppColors.textSecondary,
-                        ),
+                      color: AppColors.textSecondary,
+                    ),
                   ),
                 ],
               ),

@@ -123,10 +123,7 @@ class DecksProvider extends ChangeNotifier {
 
     if (goalId == _currentGoalId) {
       _decks.insert(0, deck);
-      _deckStats[deck.id] = const DeckStats(
-        cardCount: 0,
-        masteredCount: 0,
-      );
+      _deckStats[deck.id] = const DeckStats(cardCount: 0, masteredCount: 0);
       notifyListeners();
     }
 
@@ -188,9 +185,9 @@ class DecksProvider extends ChangeNotifier {
   /// Get a deck by ID
   Deck? getDeckById(String deckId) {
     return _decks.cast<Deck?>().firstWhere(
-          (d) => d?.id == deckId,
-          orElse: () => null,
-        );
+      (d) => d?.id == deckId,
+      orElse: () => null,
+    );
   }
 
   /// Clear current state
@@ -208,10 +205,7 @@ class DeckStats {
   final int cardCount;
   final int masteredCount;
 
-  const DeckStats({
-    required this.cardCount,
-    required this.masteredCount,
-  });
+  const DeckStats({required this.cardCount, required this.masteredCount});
 
   /// Progress percentage (0-100)
   double get progressPercent {

@@ -56,17 +56,17 @@ class ExportImportService {
 
     for (final goal in goals) {
       final decks = await _db.getDecksForGoal(goal.id);
-      
+
       for (final deck in decks) {
         final cards = await _db.getFlashcardsForDeck(deck.id);
-        
+
         for (final card in cards) {
           // Escape commas and quotes in CSV format
           final front = _escapeCsv(card.front);
           final back = _escapeCsv(card.back);
           final deckName = _escapeCsv(deck.name);
           final goalName = _escapeCsv(goal.name);
-          
+
           csvLines.add('$front,$back,$deckName,$goalName');
         }
       }
@@ -105,10 +105,7 @@ class ExportImportService {
     await file.writeAsString(content);
 
     // Share the file
-    await Share.shareXFiles(
-      [XFile(file.path)],
-      subject: 'Skill Forge Export',
-    );
+    await Share.shareXFiles([XFile(file.path)], subject: 'Skill Forge Export');
   }
 
   String _getTimestamp() {
@@ -182,10 +179,9 @@ class ExportImportService {
     await file.writeAsString(content);
 
     // Share the file
-    await Share.shareXFiles(
-      [XFile(file.path)],
-      subject: 'Skill Forge - ${deck.name}',
-    );
+    await Share.shareXFiles([
+      XFile(file.path),
+    ], subject: 'Skill Forge - ${deck.name}');
   }
 
   /// Export a single goal with all its decks and cards
@@ -230,10 +226,9 @@ class ExportImportService {
     await file.writeAsString(content);
 
     // Share the file
-    await Share.shareXFiles(
-      [XFile(file.path)],
-      subject: 'Skill Forge - ${goal.name}',
-    );
+    await Share.shareXFiles([
+      XFile(file.path),
+    ], subject: 'Skill Forge - ${goal.name}');
   }
 
   // ============================================================
@@ -244,7 +239,7 @@ class ExportImportService {
   Future<ImportResult> importFromJson(String jsonString) async {
     try {
       final data = jsonDecode(jsonString) as Map<String, dynamic>;
-      
+
       // Validate version
       final version = data['version'] as String?;
       if (version != '1.0') {
@@ -260,7 +255,8 @@ class ExportImportService {
       int sessionsImported = 0;
 
       // Import goals
-      final goals = (data['goals'] as List?)?.cast<Map<String, dynamic>>() ?? [];
+      final goals =
+          (data['goals'] as List?)?.cast<Map<String, dynamic>>() ?? [];
       for (final goalMap in goals) {
         final goal = LearningGoal.fromMap(goalMap);
         await _db.insertGoal(goal);
@@ -268,7 +264,8 @@ class ExportImportService {
       }
 
       // Import decks
-      final decks = (data['decks'] as List?)?.cast<Map<String, dynamic>>() ?? [];
+      final decks =
+          (data['decks'] as List?)?.cast<Map<String, dynamic>>() ?? [];
       for (final deckMap in decks) {
         final deck = Deck.fromMap(deckMap);
         await _db.insertDeck(deck);
@@ -276,7 +273,8 @@ class ExportImportService {
       }
 
       // Import flashcards
-      final cards = (data['flashcards'] as List?)?.cast<Map<String, dynamic>>() ?? [];
+      final cards =
+          (data['flashcards'] as List?)?.cast<Map<String, dynamic>>() ?? [];
       for (final cardMap in cards) {
         final card = Flashcard.fromMap(cardMap);
         await _db.insertFlashcard(card);
@@ -284,7 +282,8 @@ class ExportImportService {
       }
 
       // Import study sessions
-      final sessions = (data['study_sessions'] as List?)?.cast<Map<String, dynamic>>() ?? [];
+      final sessions =
+          (data['study_sessions'] as List?)?.cast<Map<String, dynamic>>() ?? [];
       for (final sessionMap in sessions) {
         final session = StudySession.fromMap(sessionMap);
         await _db.insertStudySession(session);
@@ -293,32 +292,29 @@ class ExportImportService {
 
       return ImportResult(
         success: true,
-        message: 'Imported $goalsImported goals, $decksImported decks, $cardsImported cards, $sessionsImported sessions',
+        message:
+            'Imported $goalsImported goals, $decksImported decks, $cardsImported cards, $sessionsImported sessions',
         goalsImported: goalsImported,
         decksImported: decksImported,
         cardsImported: cardsImported,
         sessionsImported: sessionsImported,
       );
     } catch (e) {
-      return ImportResult(
-        success: false,
-        message: 'Import failed: $e',
-      );
+      return ImportResult(success: false, message: 'Import failed: $e');
     }
   }
 
   /// Import cards from CSV
-  Future<ImportResult> importFromCsv(String csvString, {
+  Future<ImportResult> importFromCsv(
+    String csvString, {
     required String goalId,
     required String deckName,
   }) async {
     try {
       // Create or get deck
-      final deck = await _db.insertDeck(Deck.create(
-        goalId: goalId,
-        name: deckName,
-        source: 'CSV Import',
-      ));
+      final deck = await _db.insertDeck(
+        Deck.create(goalId: goalId, name: deckName, source: 'CSV Import'),
+      );
 
       final lines = csvString.split('\n');
       int cardsImported = 0;
@@ -351,10 +347,7 @@ class ExportImportService {
         cardsImported: cardsImported,
       );
     } catch (e) {
-      return ImportResult(
-        success: false,
-        message: 'CSV import failed: $e',
-      );
+      return ImportResult(success: false, message: 'CSV import failed: $e');
     }
   }
 
@@ -388,10 +381,7 @@ class ExportImportService {
 }
 
 /// Export format options
-enum ExportFormat {
-  json,
-  csv,
-}
+enum ExportFormat { json, csv }
 
 /// Result of an import operation
 class ImportResult {

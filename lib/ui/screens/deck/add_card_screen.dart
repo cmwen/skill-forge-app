@@ -36,13 +36,13 @@ class _AddCardScreenState extends State<AddCardScreen> {
 
     try {
       await context.read<FlashcardsProvider>().createFlashcard(
-            deckId: widget.deckId,
-            front: _frontController.text.trim(),
-            back: _backController.text.trim(),
-            notes: _notesController.text.trim().isEmpty
-                ? null
-                : _notesController.text.trim(),
-          );
+        deckId: widget.deckId,
+        front: _frontController.text.trim(),
+        back: _backController.text.trim(),
+        notes: _notesController.text.trim().isEmpty
+            ? null
+            : _notesController.text.trim(),
+      );
 
       if (mounted) {
         if (_addAnother) {
@@ -80,9 +80,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Add Card'),
-      ),
+      appBar: AppBar(title: const Text('Add Card')),
       body: Form(
         key: _formKey,
         child: ListView(
@@ -112,9 +110,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
             const SizedBox(height: AppSpacing.s),
             TextFormField(
               controller: _backController,
-              decoration: const InputDecoration(
-                hintText: 'e.g., Madrid',
-              ),
+              decoration: const InputDecoration(hintText: 'e.g., Madrid'),
               maxLines: 3,
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
