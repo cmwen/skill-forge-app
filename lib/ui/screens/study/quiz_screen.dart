@@ -45,31 +45,31 @@ class _QuizScreenState extends State<QuizScreen> {
   void _setupQuiz() {
     final flashcardsProvider = context.read<FlashcardsProvider>();
     _allCards = List.from(flashcardsProvider.flashcards);
-    
+
     // Select cards for the quiz
     final available = List<Flashcard>.from(_allCards);
     available.shuffle();
     _quizCards = available.take(widget.questionCount).toList();
-    
+
     _generateOptions();
   }
 
   void _generateOptions() {
     if (_currentIndex >= _quizCards.length) return;
-    
+
     final correctCard = _quizCards[_currentIndex];
     final correctIndex = _allCards.indexOf(correctCard);
-    
+
     // Get 3 wrong answers
     final wrongIndices = <int>[];
     final availableIndices = List<int>.generate(_allCards.length, (i) => i)
       ..remove(correctIndex);
     availableIndices.shuffle();
-    
+
     for (var i = 0; i < min(3, availableIndices.length); i++) {
       wrongIndices.add(availableIndices[i]);
     }
-    
+
     // Combine and shuffle
     _currentOptions = [correctIndex, ...wrongIndices];
     _currentOptions.shuffle();
@@ -77,15 +77,15 @@ class _QuizScreenState extends State<QuizScreen> {
 
   void _startSession() {
     context.read<StudyProvider>().startSession(
-          goalId: widget.goalId,
-          deckId: widget.deckId,
-          sessionType: StudySessionType.quiz,
-        );
+      goalId: widget.goalId,
+      deckId: widget.deckId,
+      sessionType: StudySessionType.quiz,
+    );
   }
 
   void _selectAnswer(int optionIndex) {
     if (_showingResult) return;
-    
+
     final correctCard = _quizCards[_currentIndex];
     final selectedCardIndex = _currentOptions[optionIndex];
     final isCorrect = _allCards[selectedCardIndex].id == correctCard.id;
@@ -100,9 +100,9 @@ class _QuizScreenState extends State<QuizScreen> {
 
     // Update flashcard stats
     context.read<FlashcardsProvider>().recordReview(
-          correctCard.id,
-          isCorrect ? 2 : 0, // Easy if correct, Hard if wrong
-        );
+      correctCard.id,
+      isCorrect ? 2 : 0, // Easy if correct, Hard if wrong
+    );
 
     if (isCorrect) {
       _correctCount++;
@@ -113,7 +113,7 @@ class _QuizScreenState extends State<QuizScreen> {
     setState(() {
       _selectedAnswer = null;
       _showingResult = false;
-      
+
       if (_currentIndex < _quizCards.length - 1) {
         _currentIndex++;
         _generateOptions();
@@ -126,33 +126,33 @@ class _QuizScreenState extends State<QuizScreen> {
 
   Future<void> _endSession() async {
     if (!mounted) return;
-    
+
     await context.read<StudyProvider>().endSession();
-    
+
     if (!mounted) return;
-    
+
     await context.read<DecksProvider>().refreshDeckStats(widget.deckId);
-    
+
     if (!mounted) return;
-    
+
     await context.read<GoalsProvider>().refreshGoalStats(widget.goalId);
-    
+
     if (!mounted) return;
-    
+
     // Refresh flashcards to reflect updated mastery levels
     await context.read<FlashcardsProvider>().refresh();
-    
+
     if (!mounted) return;
-    
+
     // Refresh overall stats for the progress screen
     await context.read<StudyProvider>().refreshOverallStats();
-    
+
     if (!mounted) return;
-    
+
     await context.read<DecksProvider>().markDeckStudied(widget.deckId);
-    
+
     if (!mounted) return;
-    
+
     await context.read<GoalsProvider>().markGoalStudied(widget.goalId);
   }
 
@@ -244,9 +244,8 @@ class _QuizScreenState extends State<QuizScreen> {
                       children: [
                         Text(
                           'What is the answer for:',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: AppColors.textSecondary,
-                              ),
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(color: AppColors.textSecondary),
                         ),
                         const SizedBox(height: AppSpacing.m),
                         Text(
@@ -269,19 +268,22 @@ class _QuizScreenState extends State<QuizScreen> {
                     itemBuilder: (context, index) {
                       final cardIndex = _currentOptions[index];
                       final optionCard = _allCards[cardIndex];
-                      final isCorrectAnswer =
-                          optionCard.id == currentCard.id;
+                      final isCorrectAnswer = optionCard.id == currentCard.id;
                       final isSelected = _selectedAnswer == index;
 
                       Color? backgroundColor;
                       Color? borderColor;
-                      
+
                       if (_showingResult) {
                         if (isCorrectAnswer) {
-                          backgroundColor = AppColors.success.withValues(alpha: 0.2);
+                          backgroundColor = AppColors.success.withValues(
+                            alpha: 0.2,
+                          );
                           borderColor = AppColors.success;
                         } else if (isSelected) {
-                          backgroundColor = AppColors.error.withValues(alpha: 0.2);
+                          backgroundColor = AppColors.error.withValues(
+                            alpha: 0.2,
+                          );
                           borderColor = AppColors.error;
                         }
                       }
@@ -290,7 +292,9 @@ class _QuizScreenState extends State<QuizScreen> {
                         color: backgroundColor ?? AppColors.surface,
                         borderRadius: AppRadius.mediumBorderRadius,
                         child: InkWell(
-                          onTap: _showingResult ? null : () => _selectAnswer(index),
+                          onTap: _showingResult
+                              ? null
+                              : () => _selectAnswer(index),
                           borderRadius: AppRadius.mediumBorderRadius,
                           child: Container(
                             padding: const EdgeInsets.all(AppSpacing.m),
@@ -310,33 +314,42 @@ class _QuizScreenState extends State<QuizScreen> {
                                     shape: BoxShape.circle,
                                     color: isSelected && _showingResult
                                         ? (isCorrectAnswer
-                                            ? AppColors.success
-                                            : AppColors.error)
+                                              ? AppColors.success
+                                              : AppColors.error)
                                         : AppColors.card,
                                   ),
                                   child: Center(
                                     child: _showingResult && isCorrectAnswer
-                                        ? const Icon(Icons.check,
-                                            color: Colors.white, size: 20)
+                                        ? const Icon(
+                                            Icons.check,
+                                            color: Colors.white,
+                                            size: 20,
+                                          )
                                         : _showingResult &&
-                                                isSelected &&
-                                                !isCorrectAnswer
-                                            ? const Icon(Icons.close,
-                                                color: Colors.white, size: 20)
-                                            : Text(
-                                                String.fromCharCode(
-                                                    65 + index), // A, B, C, D
-                                                style: const TextStyle(
-                                                    fontWeight: FontWeight.bold),
-                                              ),
+                                              isSelected &&
+                                              !isCorrectAnswer
+                                        ? const Icon(
+                                            Icons.close,
+                                            color: Colors.white,
+                                            size: 20,
+                                          )
+                                        : Text(
+                                            String.fromCharCode(
+                                              65 + index,
+                                            ), // A, B, C, D
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
                                   ),
                                 ),
                                 const SizedBox(width: AppSpacing.m),
                                 Expanded(
                                   child: Text(
                                     optionCard.back,
-                                    style:
-                                        Theme.of(context).textTheme.bodyLarge,
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.bodyLarge,
                                   ),
                                 ),
                               ],
@@ -369,8 +382,9 @@ class _QuizScreenState extends State<QuizScreen> {
 
   Widget _buildQuizSummary() {
     final totalQuestions = _quizCards.length;
-    final accuracy =
-        totalQuestions > 0 ? (_correctCount / totalQuestions) * 100 : 0.0;
+    final accuracy = totalQuestions > 0
+        ? (_correctCount / totalQuestions) * 100
+        : 0.0;
 
     return Scaffold(
       appBar: AppBar(
@@ -387,22 +401,22 @@ class _QuizScreenState extends State<QuizScreen> {
                 accuracy >= 80
                     ? Icons.emoji_events
                     : accuracy >= 60
-                        ? Icons.thumb_up
-                        : Icons.trending_up,
+                    ? Icons.thumb_up
+                    : Icons.trending_up,
                 size: 64,
                 color: accuracy >= 80
                     ? AppColors.success
                     : accuracy >= 60
-                        ? AppColors.warning
-                        : AppColors.primary,
+                    ? AppColors.warning
+                    : AppColors.primary,
               ),
               const SizedBox(height: AppSpacing.l),
               Text(
                 accuracy >= 80
                     ? 'Excellent!'
                     : accuracy >= 60
-                        ? 'Good Job!'
-                        : 'Keep Practicing!',
+                    ? 'Good Job!'
+                    : 'Keep Practicing!',
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
               const SizedBox(height: AppSpacing.l),
@@ -411,13 +425,13 @@ class _QuizScreenState extends State<QuizScreen> {
               Text(
                 '${accuracy.toInt()}%',
                 style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                      color: accuracy >= 80
-                          ? AppColors.success
-                          : accuracy >= 60
-                              ? AppColors.warning
-                              : AppColors.error,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  color: accuracy >= 80
+                      ? AppColors.success
+                      : accuracy >= 60
+                      ? AppColors.warning
+                      : AppColors.error,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: AppSpacing.m),
 
@@ -488,9 +502,9 @@ class _SummaryRow extends StatelessWidget {
           Text(label, style: Theme.of(context).textTheme.bodyLarge),
           Text(
             value,
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
           ),
         ],
       ),

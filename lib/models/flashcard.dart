@@ -108,12 +108,12 @@ class Flashcard {
   Flashcard recordReview({required int quality}) {
     final now = DateTime.now();
     final wasCorrect = quality >= 1;
-    
+
     // Simple SM-2 implementation
     double newEaseFactor = easeFactor;
     double newInterval = intervalDays;
     int newMastery = masteryLevel;
-    
+
     if (quality == 0) {
       // Hard: reduce interval, decrease mastery
       newInterval = 1.0;
@@ -129,7 +129,7 @@ class Flashcard {
       newMastery = (masteryLevel + 20).clamp(0, 100);
       newEaseFactor = (easeFactor + 0.1).clamp(1.3, 2.5);
     }
-    
+
     return copyWith(
       lastReviewedAt: now,
       nextReviewAt: now.add(Duration(hours: (newInterval * 24).round())),

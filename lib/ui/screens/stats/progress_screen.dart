@@ -26,7 +26,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
   Future<void> _loadData() async {
     final goalsProvider = context.read<GoalsProvider>();
     final studyProvider = context.read<StudyProvider>();
-    
+
     await Future.wait([
       goalsProvider.loadGoals(),
       studyProvider.loadOverallStats(),
@@ -81,15 +81,14 @@ class _ProgressScreenState extends State<ProgressScreen> {
                         _StatRow(
                           label: 'Total study time',
                           value: StudyProvider.formatDetailedDuration(
-                              totalStudyTime),
+                            totalStudyTime,
+                          ),
                         ),
-                        _StatRow(
-                          label: 'Total cards',
-                          value: '$totalCards',
-                        ),
+                        _StatRow(label: 'Total cards', value: '$totalCards'),
                         _StatRow(
                           label: 'Cards mastered',
-                          value: '$masteredCards (${totalCards > 0 ? ((masteredCards / totalCards) * 100).toInt() : 0}%)',
+                          value:
+                              '$masteredCards (${totalCards > 0 ? ((masteredCards / totalCards) * 100).toInt() : 0}%)',
                           valueColor: AppColors.success,
                         ),
                         _StatRow(
@@ -137,7 +136,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
                         onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => GoalStatsScreen(goalId: goal.id),
+                              builder: (context) =>
+                                  GoalStatsScreen(goalId: goal.id),
                             ),
                           );
                         },
@@ -159,18 +159,21 @@ class _ProgressScreenState extends State<ProgressScreen> {
                       children: [
                         _StatRow(
                           label: 'Today',
-                          value:
-                              StudyProvider.formatDetailedDuration(todayStudyTime),
+                          value: StudyProvider.formatDetailedDuration(
+                            todayStudyTime,
+                          ),
                         ),
                         _StatRow(
                           label: 'This week',
                           value: StudyProvider.formatDetailedDuration(
-                              thisWeekStudyTime),
+                            thisWeekStudyTime,
+                          ),
                         ),
                         _StatRow(
                           label: 'This month',
                           value: StudyProvider.formatDetailedDuration(
-                              totalStudyTime), // TODO: Calculate monthly
+                            totalStudyTime,
+                          ), // TODO: Calculate monthly
                         ),
                       ],
                     ),
@@ -189,8 +192,10 @@ class _ProgressScreenState extends State<ProgressScreen> {
                     final goal = goalsProvider.getGoalById(session.goalId);
                     return Card(
                       child: ListTile(
-                        leading: Text(goal?.icon ?? '📚',
-                            style: const TextStyle(fontSize: 24)),
+                        leading: Text(
+                          goal?.icon ?? '📚',
+                          style: const TextStyle(fontSize: 24),
+                        ),
                         title: Text(goal?.name ?? 'Unknown Goal'),
                         subtitle: Text(
                           '${session.cardsReviewed} cards • ${session.accuracy.toInt()}% accuracy',
@@ -281,9 +286,9 @@ class _ProgressScreenState extends State<ProgressScreen> {
 
       if (context.mounted) {
         Navigator.pop(context); // Close loading
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Export complete')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Export complete')));
       }
     } catch (e) {
       if (context.mounted) {
@@ -304,11 +309,7 @@ class _StatRow extends StatelessWidget {
   final String value;
   final Color? valueColor;
 
-  const _StatRow({
-    required this.label,
-    required this.value,
-    this.valueColor,
-  });
+  const _StatRow({required this.label, required this.value, this.valueColor});
 
   @override
   Widget build(BuildContext context) {
@@ -317,16 +318,13 @@ class _StatRow extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            label,
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
+          Text(label, style: Theme.of(context).textTheme.bodyMedium),
           Text(
             value,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: valueColor ?? AppColors.textSecondary,
-                  fontWeight: FontWeight.w500,
-                ),
+              color: valueColor ?? AppColors.textSecondary,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ],
       ),

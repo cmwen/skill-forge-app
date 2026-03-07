@@ -51,10 +51,7 @@ class EmptyStateWidget extends StatelessWidget {
           children: [
             // Icon or emoji
             if (emoji != null)
-              Text(
-                emoji!,
-                style: const TextStyle(fontSize: 64),
-              )
+              Text(emoji!, style: const TextStyle(fontSize: 64))
             else
               Icon(
                 icon ?? Icons.folder_open_outlined,
@@ -74,19 +71,16 @@ class EmptyStateWidget extends StatelessWidget {
             // Description
             Text(
               description,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: AppColors.textSecondary,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: AppSpacing.l),
 
             // Action button
             if (actionText != null && onAction != null)
-              ElevatedButton(
-                onPressed: onAction,
-                child: Text(actionText!),
-              ),
+              ElevatedButton(onPressed: onAction, child: Text(actionText!)),
 
             // Secondary action
             if (secondaryActionText != null && onSecondaryAction != null) ...[

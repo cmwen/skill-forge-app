@@ -26,9 +26,30 @@ class _EditGoalScreenState extends State<EditGoalScreen> {
 
   // Common emoji icons for goals
   static const List<String> _iconOptions = [
-    '📚', '🎯', '💻', '🌍', '✈️', '🎵', '🎮', '⚽',
-    '🇪🇸', '🇫🇷', '🇩🇪', '🇯🇵', '🇨🇳', '🇰🇷', '🇮🇹', '🇧🇷',
-    '🔬', '🧮', '📊', '🎨', '✍️', '🏋️', '🧘', '🍳',
+    '📚',
+    '🎯',
+    '💻',
+    '🌍',
+    '✈️',
+    '🎵',
+    '🎮',
+    '⚽',
+    '🇪🇸',
+    '🇫🇷',
+    '🇩🇪',
+    '🇯🇵',
+    '🇨🇳',
+    '🇰🇷',
+    '🇮🇹',
+    '🇧🇷',
+    '🔬',
+    '🧮',
+    '📊',
+    '🎨',
+    '✍️',
+    '🏋️',
+    '🧘',
+    '🍳',
   ];
 
   @override
@@ -93,9 +114,9 @@ class _EditGoalScreenState extends State<EditGoalScreen> {
       await context.read<GoalsProvider>().updateGoal(updatedGoal);
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Goal updated!')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Goal updated!')));
         Navigator.pop(context, true);
       }
     } catch (e) {
@@ -179,14 +200,13 @@ class _EditGoalScreenState extends State<EditGoalScreen> {
                       color: isSelected ? AppColors.primary : AppColors.surface,
                       borderRadius: AppRadius.smallBorderRadius,
                       border: Border.all(
-                        color: isSelected ? AppColors.primary : AppColors.border,
+                        color: isSelected
+                            ? AppColors.primary
+                            : AppColors.border,
                       ),
                     ),
                     alignment: Alignment.center,
-                    child: Text(
-                      icon,
-                      style: const TextStyle(fontSize: 24),
-                    ),
+                    child: Text(icon, style: const TextStyle(fontSize: 24)),
                   ),
                 );
               }).toList(),

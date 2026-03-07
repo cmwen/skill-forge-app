@@ -131,10 +131,7 @@ abstract final class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: AppRadius.smallBorderRadius,
           ),
-          textStyle: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
+          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
@@ -148,10 +145,7 @@ abstract final class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: AppRadius.smallBorderRadius,
           ),
-          textStyle: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
+          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
       ),
       textButtonTheme: TextButtonThemeData(
@@ -161,10 +155,7 @@ abstract final class AppTheme {
             horizontal: AppSpacing.m,
             vertical: AppSpacing.s,
           ),
-          textStyle: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-          ),
+          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
         ),
       ),
       floatingActionButtonTheme: const FloatingActionButtonThemeData(
@@ -205,7 +196,10 @@ abstract final class AppTheme {
         unselectedItemColor: AppColors.textSecondary,
         type: BottomNavigationBarType.fixed,
         elevation: 8,
-        selectedLabelStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+        selectedLabelStyle: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+        ),
         unselectedLabelStyle: TextStyle(fontSize: 12),
       ),
       dividerTheme: const DividerThemeData(
@@ -293,18 +287,9 @@ abstract final class AppTheme {
           fontWeight: FontWeight.w500,
           color: AppColors.textPrimary,
         ),
-        bodyLarge: TextStyle(
-          fontSize: 16,
-          color: AppColors.textPrimary,
-        ),
-        bodyMedium: TextStyle(
-          fontSize: 14,
-          color: AppColors.textSecondary,
-        ),
-        bodySmall: TextStyle(
-          fontSize: 12,
-          color: AppColors.textSecondary,
-        ),
+        bodyLarge: TextStyle(fontSize: 16, color: AppColors.textPrimary),
+        bodyMedium: TextStyle(fontSize: 14, color: AppColors.textSecondary),
+        bodySmall: TextStyle(fontSize: 12, color: AppColors.textSecondary),
         labelLarge: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w500,

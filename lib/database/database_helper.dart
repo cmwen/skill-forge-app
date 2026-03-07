@@ -26,21 +26,19 @@ class DatabaseHelper {
 
   /// Custom database name for testing
   final String _databaseName;
-  
+
   /// Whether to use in-memory database (for testing)
   final bool _inMemory;
 
   Database? _database;
 
   /// Creates a DatabaseHelper instance
-  /// 
+  ///
   /// [databaseName] - Custom database name (for testing)
   /// [inMemory] - Use in-memory database (for testing)
-  DatabaseHelper({
-    String? databaseName,
-    bool inMemory = false,
-  })  : _databaseName = databaseName ?? _defaultDatabaseName,
-        _inMemory = inMemory;
+  DatabaseHelper({String? databaseName, bool inMemory = false})
+    : _databaseName = databaseName ?? _defaultDatabaseName,
+      _inMemory = inMemory;
 
   /// Whether the database is initialized
   bool get isInitialized => _database != null;
@@ -64,7 +62,7 @@ class DatabaseHelper {
         onCreate: _onCreate,
         onUpgrade: _onUpgrade,
       );
-      
+
       // Verify that critical tables exist
       await _verifySchema();
     } catch (e) {
@@ -88,7 +86,7 @@ class DatabaseHelper {
   /// Verify that all critical tables exist
   Future<void> _verifySchema() async {
     final tables = ['learning_goals', 'decks', 'flashcards', 'study_sessions'];
-    
+
     for (final table in tables) {
       try {
         await db.query(table, limit: 1);
@@ -182,14 +180,16 @@ class DatabaseHelper {
     ''');
 
     // Create indexes for faster queries
+    await db.execute('CREATE INDEX idx_decks_goal_id ON decks (goal_id)');
     await db.execute(
-        'CREATE INDEX idx_decks_goal_id ON decks (goal_id)');
+      'CREATE INDEX idx_flashcards_deck_id ON flashcards (deck_id)',
+    );
     await db.execute(
-        'CREATE INDEX idx_flashcards_deck_id ON flashcards (deck_id)');
+      'CREATE INDEX idx_flashcards_next_review ON flashcards (next_review_at)',
+    );
     await db.execute(
-        'CREATE INDEX idx_flashcards_next_review ON flashcards (next_review_at)');
-    await db.execute(
-        'CREATE INDEX idx_study_sessions_goal_id ON study_sessions (goal_id)');
+      'CREATE INDEX idx_study_sessions_goal_id ON study_sessions (goal_id)',
+    );
   }
 
   /// Handle database upgrades
@@ -199,7 +199,7 @@ class DatabaseHelper {
       try {
         // Add is_archived column to learning_goals if it doesn't exist
         await db.execute(
-          'ALTER TABLE learning_goals ADD COLUMN is_archived INTEGER NOT NULL DEFAULT 0'
+          'ALTER TABLE learning_goals ADD COLUMN is_archived INTEGER NOT NULL DEFAULT 0',
         );
       } catch (e) {
         // Column might already exist, which is fine
@@ -236,7 +236,8 @@ class DatabaseHelper {
       // Create indexes if they don't exist
       try {
         await db.execute(
-            'CREATE INDEX IF NOT EXISTS idx_study_sessions_goal_id ON study_sessions (goal_id)');
+          'CREATE INDEX IF NOT EXISTS idx_study_sessions_goal_id ON study_sessions (goal_id)',
+        );
       } catch (e) {
         // Index might already exist, which is fine
       }
@@ -446,23 +447,29 @@ class DatabaseHelper {
 
   /// Get total card count for a goal (across all decks)
   Future<int> getCardCountForGoal(String goalId) async {
-    final result = await db.rawQuery('''
+    final result = await db.rawQuery(
+      '''
       SELECT COUNT(*) as count 
       FROM flashcards f 
       JOIN decks d ON f.deck_id = d.id 
       WHERE d.goal_id = ?
-    ''', [goalId]);
+    ''',
+      [goalId],
+    );
     return Sqflite.firstIntValue(result) ?? 0;
   }
 
   /// Get mastered card count for a goal
   Future<int> getMasteredCardCountForGoal(String goalId) async {
-    final result = await db.rawQuery('''
+    final result = await db.rawQuery(
+      '''
       SELECT COUNT(*) as count 
       FROM flashcards f 
       JOIN decks d ON f.deck_id = d.id 
       WHERE d.goal_id = ? AND f.mastery_level >= 80
-    ''', [goalId]);
+    ''',
+      [goalId],
+    );
     return Sqflite.firstIntValue(result) ?? 0;
   }
 
@@ -520,7 +527,11 @@ class DatabaseHelper {
   Future<int> getThisWeekStudyTime() async {
     final today = DateTime.now();
     final startOfWeek = today.subtract(Duration(days: today.weekday - 1));
-    final startOfDay = DateTime(startOfWeek.year, startOfWeek.month, startOfWeek.day);
+    final startOfDay = DateTime(
+      startOfWeek.year,
+      startOfWeek.month,
+      startOfWeek.day,
+    );
     final result = await db.rawQuery(
       'SELECT SUM(duration_seconds) as total FROM study_sessions WHERE started_at >= ?',
       [startOfDay.toIso8601String()],
@@ -534,21 +545,33 @@ class DatabaseHelper {
 
   /// Get overall statistics
   Future<Map<String, dynamic>> getOverallStats() async {
-    final totalGoals = Sqflite.firstIntValue(
-      await db.rawQuery('SELECT COUNT(*) FROM learning_goals WHERE is_archived = 0'),
-    ) ?? 0;
+    final totalGoals =
+        Sqflite.firstIntValue(
+          await db.rawQuery(
+            'SELECT COUNT(*) FROM learning_goals WHERE is_archived = 0',
+          ),
+        ) ??
+        0;
 
-    final totalCards = Sqflite.firstIntValue(
-      await db.rawQuery('SELECT COUNT(*) FROM flashcards'),
-    ) ?? 0;
+    final totalCards =
+        Sqflite.firstIntValue(
+          await db.rawQuery('SELECT COUNT(*) FROM flashcards'),
+        ) ??
+        0;
 
-    final masteredCards = Sqflite.firstIntValue(
-      await db.rawQuery('SELECT COUNT(*) FROM flashcards WHERE mastery_level >= 80'),
-    ) ?? 0;
+    final masteredCards =
+        Sqflite.firstIntValue(
+          await db.rawQuery(
+            'SELECT COUNT(*) FROM flashcards WHERE mastery_level >= 80',
+          ),
+        ) ??
+        0;
 
-    final totalStudyTime = Sqflite.firstIntValue(
-      await db.rawQuery('SELECT SUM(duration_seconds) FROM study_sessions'),
-    ) ?? 0;
+    final totalStudyTime =
+        Sqflite.firstIntValue(
+          await db.rawQuery('SELECT SUM(duration_seconds) FROM study_sessions'),
+        ) ??
+        0;
 
     return {
       'total_goals': totalGoals,
