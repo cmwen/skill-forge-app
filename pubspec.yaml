@@ -63,7 +63,7 @@ dependencies:
   uuid: ^4.5.3
 
   # CSV Export/Import
-  csv: ^7.1.0
+  csv: ^7.2.0
 
   # File Picker
   file_picker: ^10.3.10
