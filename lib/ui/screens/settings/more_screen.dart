@@ -770,7 +770,7 @@ class _MoreScreenState extends State<MoreScreen> {
   Future<void> _importJson(BuildContext context) async {
     try {
       final exportService = context.read<ExportImportService>();
-      final result = await FilePicker.platform.pickFiles(
+      final result = await FilePicker.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['json'],
       );
